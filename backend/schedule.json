@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "timezone": "Asia/Kolkata",
+  "enabled": true,
+  "upload_time": "21:00",
+  "duration": {
+    "mode": "test",
+    "selected_minutes": 5,
+    "min_minutes": 1,
+    "max_minutes": 5,
+    "production_max_hours": 12
+  },
+  "week": [
+    {"day": "monday", "theme_id": "01_monday", "title": "Midnight Cabin Heavy Rain", "enabled": true},
+    {"day": "tuesday", "theme_id": "02_tuesday", "title": "Rainy Window Night", "enabled": false},
+    {"day": "wednesday", "theme_id": "03_wednesday", "title": "Forest Rain at Midnight", "enabled": false},
+    {"day": "thursday", "theme_id": "04_thursday", "title": "Heavy Rain on Tin Roof", "enabled": false},
+    {"day": "friday", "theme_id": "05_friday", "title": "Distant Thunder Storm", "enabled": false},
+    {"day": "saturday", "theme_id": "06_saturday", "title": "Cozy Car Rain", "enabled": false},
+    {"day": "sunday", "theme_id": "07_sunday", "title": "Peaceful Rain for Deep Sleep", "enabled": false}
+  ]
+}
