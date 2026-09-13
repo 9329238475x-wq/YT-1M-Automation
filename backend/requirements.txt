@@ -1,0 +1,13 @@
+numpy>=2.2
+scipy>=1.15
+soundfile>=0.13
+Pillow>=11.0
+noise>=1.2.2
+requests>=2.32
+python-dotenv>=1.1
+pytz>=2025.2
+fastapi>=0.115
+uvicorn[standard]>=0.34
+google-api-python-client>=2.170
+google-auth-oauthlib>=1.2
+google-auth-httplib2>=0.2
