@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>YT-1M Sound Testing Lab</title>
+<style>
+:root{--bg:#07111f;--card:#101c30;--line:#263752;--text:#eef5ff;--muted:#9fb0c9;--accent:#5d8cff;--green:#35d07f;--red:#ff647c}*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#07111f,#0b1325);color:var(--text);font-family:Inter,system-ui,Segoe UI,sans-serif}.wrap{max-width:1250px;margin:auto;padding:24px}.top{display:flex;justify-content:space-between;gap:15px;align-items:center;flex-wrap:wrap}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:16px;margin-top:18px}.card{background:rgba(16,28,48,.96);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 12px 35px #0003}h1,h2{margin-top:0}.muted{color:var(--muted)}label{display:block;color:#b8c6dc;margin:13px 0 6px}select,input{width:100%;padding:12px;border-radius:10px;border:1px solid #344766;background:#081323;color:#fff}button{border:0;border-radius:10px;padding:12px 16px;background:var(--accent);color:#fff;font-weight:800;cursor:pointer;margin:7px 7px 0 0}.ghost{background:#243652}.danger{background:#7b2637}.badge{padding:7px 11px;border-radius:999px;background:#192943;color:#c9d7ec;font-size:13px}.status{padding:12px;border-radius:12px;background:#0a1628;border:1px solid var(--line);white-space:pre-wrap;margin-top:12px}.theme{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:13px;border:1px solid var(--line);border-radius:12px;margin:8px 0;background:#0a1628}.theme small{color:var(--muted)}audio{width:100%;margin-top:12px}.pill{font-size:12px;padding:5px 8px;border-radius:999px;background:#192943}.ocean{color:#6fb5ff}.rain{color:#9fe3c0}a{color:#8cb0ff;text-decoration:none;font-weight:800}
+</style></head>
+<body><div class="wrap">
+<div class="top"><div><h1>🎧 Sound Testing Lab</h1><div class="muted">यहाँ अभी सिर्फ audio test होगा — video और YouTube upload नहीं।</div></div><span class="badge" id="connection">Checking backend...</span></div>
+<div class="grid">
+<section class="card"><h2>Generate Sound</h2><label>Theme</label><select id="theme"></select><label>Test duration</label><select id="duration"><option value="1">1 minute</option><option value="2">2 minutes</option><option value="3">3 minutes</option><option value="5" selected>5 minutes</option></select><label>Seed</label><input id="seed" value="12345"><button onclick="generate()">🎧 Generate Sound</button><button class="ghost" onclick="location.href='/'">← Control Center</button><div class="status" id="status">Ready.</div><audio id="player" controls></audio></section>
+<section class="card"><h2>All 14 Weekly Sounds</h2><div class="muted">किसी भी theme को एक-एक करके test कर सकते हो।</div><div id="themeList"></div></section>
+</div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+async function api(url,opt={}){const r=await fetch(url,{headers:{'Content-Type':'application/json'},...opt});if(!r.ok)throw new Error(await r.text());return r.json()}
+let themes=[];
+async function load(){try{await api('/api/status');$('connection').textContent='✓ Backend connected';themes=await api('/api/themes');$('theme').innerHTML=themes.map(t=>`<option value="${t.id}">${t.name} — ${t.type}</option>`).join('');$('themeList').innerHTML=themes.map(t=>`<div class="theme"><div><b>${t.name}</b><br><small>${t.id}</small></div><span class="pill ${t.type}">${t.type}</span><button onclick="quick('${t.id}')">Test</button></div>`).join('')}catch(e){$('connection').textContent='✗ Backend offline';$('status').textContent='Backend नहीं चल रहा। पहले start_local.bat चलाओ।'}}
+async function generate(id=null){const theme=id||$('theme').value;const duration=+$('duration').value;const seed=+($('seed').value)||Date.now()%100000; $('status').textContent='Generating audio...';$('player').removeAttribute('src');try{const r=await api('/api/test-audio',{method:'POST',body:JSON.stringify({theme_id:theme,duration_minutes:duration,seed})});$('status').textContent='Job started: '+r.job_id;poll(r.job_id)}catch(e){$('status').textContent='❌ '+e.message}}
+function quick(id){$('theme').value=id;generate(id)}
+async function poll(id){try{const s=await api('/api/status');const j=s.jobs[id];if(!j)return;if(j.status==='completed'){$('status').innerHTML='✅ Sound ready: <b>'+j.theme+'</b><br>अब नीचे Play करके सुनो।';$('player').src=j.url;$('player').load();return}if(j.status==='failed'){$('status').textContent='❌ '+j.error;return}$('status').textContent='Status: '+j.status;setTimeout(()=>poll(id),1500)}catch(e){setTimeout(()=>poll(id),2500)}}
+load();
+</script></body></html>
