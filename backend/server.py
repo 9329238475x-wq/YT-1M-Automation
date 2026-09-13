@@ -28,6 +28,7 @@ TEMP.mkdir(exist_ok=True)
 app = FastAPI(title="YT-1M Automation Local Control")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 app.mount("/output", StaticFiles(directory=OUTPUT), name="output")
+app.mount("/temp", StaticFiles(directory=TEMP), name="temp")
 
 state = {"running": False, "jobs": {}}
 
@@ -52,11 +53,15 @@ class GeneratePayload(BaseModel):
     seed: int = 42
 
 
+def _limit_duration(duration_minutes: int) -> int:
+    limit = 5 if read_settings().get("testing_mode", True) else 240
+    return min(max(int(duration_minutes), 1), limit)
+
+
 def do_generate(job_id: str, theme_id: str, duration_minutes: int, seed: int) -> None:
     try:
         config = load_theme(theme_id)
-        limit = 5 if read_settings().get("testing_mode", True) else 240
-        duration_minutes = min(max(int(duration_minutes), 1), limit)
+        duration_minutes = _limit_duration(duration_minutes)
         seconds = duration_minutes * 60
         base = f"{theme_id}_{seed}_{uuid.uuid4().hex[:6]}"
         audio_path = TEMP / f"{base}.wav"
@@ -77,6 +82,31 @@ def do_generate(job_id: str, theme_id: str, duration_minutes: int, seed: int) ->
             "theme": config.get("name", theme_id),
             "file": video_path.name,
             "url": f"/output/{video_path.name}",
+        }
+    except Exception as exc:
+        state["jobs"][job_id] = {"status": "failed", "error": str(exc)}
+
+
+def do_audio_test(job_id: str, theme_id: str, duration_minutes: int, seed: int) -> None:
+    try:
+        config = load_theme(theme_id)
+        duration_minutes = _limit_duration(duration_minutes)
+        seconds = duration_minutes * 60
+        base = f"sound_{theme_id}_{seed}_{uuid.uuid4().hex[:6]}"
+        audio_path = TEMP / f"{base}.wav"
+        state["jobs"][job_id] = {
+            "status": "generating_audio",
+            "theme": config.get("name", theme_id),
+            "type": config.get("type", "unknown"),
+        }
+        generate_master_audio(seconds, audio_path, seed, config)
+        state["jobs"][job_id] = {
+            "status": "completed",
+            "theme": config.get("name", theme_id),
+            "type": config.get("type", "unknown"),
+            "file": audio_path.name,
+            "url": f"/temp/{audio_path.name}",
+            "duration_minutes": duration_minutes,
         }
     except Exception as exc:
         state["jobs"][job_id] = {"status": "failed", "error": str(exc)}
@@ -133,6 +163,18 @@ def themes() -> list[dict]:
     return result
 
 
+@app.post("/api/test-audio")
+def test_audio(payload: GeneratePayload, background_tasks: BackgroundTasks) -> dict:
+    try:
+        load_theme(payload.theme_id)
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
+    job_id = uuid.uuid4().hex
+    state["jobs"][job_id] = {"status": "queued", "theme": payload.theme_id, "type": "audio"}
+    background_tasks.add_task(do_audio_test, job_id, payload.theme_id, payload.duration_minutes, payload.seed)
+    return {"ok": True, "job_id": job_id}
+
+
 @app.post("/api/test-generate")
 def test_generate(payload: GeneratePayload, background_tasks: BackgroundTasks) -> dict:
     try:
@@ -143,6 +185,11 @@ def test_generate(payload: GeneratePayload, background_tasks: BackgroundTasks) -
     state["jobs"][job_id] = {"status": "queued", "theme": payload.theme_id}
     background_tasks.add_task(do_generate, job_id, payload.theme_id, payload.duration_minutes, payload.seed)
     return {"ok": True, "job_id": job_id}
+
+
+@app.get("/testing")
+def testing() -> FileResponse:
+    return FileResponse(FRONTEND / "testing.html")
 
 
 @app.get("/")
