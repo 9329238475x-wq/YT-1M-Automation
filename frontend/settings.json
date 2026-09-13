@@ -1,0 +1,19 @@
+{
+  "enabled": false,
+  "machine_online": false,
+  "timezone": "Asia/Kolkata",
+  "duration_minutes": 5,
+  "interval_minutes": 720,
+  "morning_time": "07:00",
+  "evening_time": "19:00",
+  "uploads_per_day": 2,
+  "auto_upload": true,
+  "auto_publish": true,
+  "retry_failed_jobs": true,
+  "max_retries": 3,
+  "concurrency": 1,
+  "keep_local_files": true,
+  "cleanup_after_upload": false,
+  "testing_mode": true,
+  "testing_max_minutes": 5
+}
