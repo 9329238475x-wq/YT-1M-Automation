@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 import numpy as np
+from scipy.signal import butter, sosfilt
 
 from .rain import generate_rain
 from .roof import generate_roof_rain
@@ -13,28 +14,38 @@ def _generate_ocean(seconds: int, sample_rate: int, seed: int, audio: dict) -> n
     n = int(seconds * sample_rate)
     t = np.arange(n, dtype=np.float32) / sample_rate
     layers = audio.get("layers", {})
+
     low = rng.normal(0, 1, n).astype(np.float32)
-    low = np.convolve(low, np.ones(401, dtype=np.float32) / 401, mode="same")
+    sos = butter(2, 0.35, btype="lowpass", fs=sample_rate, output="sos")
+    low = sosfilt(sos, low).astype(np.float32)
     low /= max(float(np.max(np.abs(low))), 1e-6)
+
     wave = np.zeros(n, dtype=np.float32)
-    lo, hi = audio.get("wave_interval_seconds", {}).get("min", 5), audio.get("wave_interval_seconds", {}).get("max", 12)
+    lo = float(audio.get("wave_interval_seconds", {}).get("min", 5))
+    hi = float(audio.get("wave_interval_seconds", {}).get("max", 12))
     pos = 0.0
     while pos < seconds:
         interval = float(rng.uniform(lo, hi))
         center = pos + interval * 0.72
         width = max(1.5, interval * 0.32)
         envelope = np.exp(-0.5 * ((t - center) / width) ** 2).astype(np.float32)
-        carrier = (0.55 * np.sin(2 * np.pi * rng.uniform(0.08, 0.16) * t + rng.uniform(0, 6.28)) +
-                   0.30 * np.sin(2 * np.pi * rng.uniform(0.18, 0.32) * t + rng.uniform(0, 6.28)))
+        carrier = (
+            0.55 * np.sin(2 * np.pi * rng.uniform(0.08, 0.16) * t + rng.uniform(0, 6.28))
+            + 0.30 * np.sin(2 * np.pi * rng.uniform(0.18, 0.32) * t + rng.uniform(0, 6.28))
+        )
         wave += envelope * carrier.astype(np.float32)
         pos += interval
+
     rolling = wave * float(layers.get("rolling_waves", 0.4))
     surf = (0.35 * low + 0.18 * np.sin(2 * np.pi * 0.055 * t)) * float(layers.get("deep_surf", 0.28))
     wash_noise = rng.normal(0, 1, n).astype(np.float32)
-    wash_noise = np.convolve(wash_noise, np.ones(21, dtype=np.float32) / 21, mode="same")
-    wash = np.tanh(wash_noise * 3.0) * (0.7 + 0.3 * np.maximum(wave, 0)) * float(layers.get("shore_wash", 0.24))
+    wash_sos = butter(2, [700, 5000], btype="bandpass", fs=sample_rate, output="sos")
+    wash_noise = sosfilt(wash_sos, wash_noise).astype(np.float32)
+    wash_noise /= max(float(np.max(np.abs(wash_noise))), 1e-6)
+    wash = wash_noise * (0.35 + 0.65 * np.maximum(wave, 0)) * float(layers.get("shore_wash", 0.24))
     foam = rng.normal(0, 0.035, n).astype(np.float32) * float(layers.get("foam_hiss", 0.06))
     wind = rng.normal(0, 0.01, n).astype(np.float32) * float(layers.get("distant_wind", 0.02))
+
     mono = surf + rolling + wash + foam + wind
     left = mono * 1.02 + rng.normal(0, 0.004, n).astype(np.float32)
     right = mono * 0.98 + rng.normal(0, 0.004, n).astype(np.float32)
