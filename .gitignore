@@ -1,0 +1,17 @@
+.env
+.venv/
+__pycache__/
+*.py[cod]
+*.log
+output/*
+temp/*
+logs/*
+metadata/runtime/*
+credentials.json
+token.json
+*.wav
+*.mp4
+*.png
+*.gif
+.DS_Store
+.vscode/
