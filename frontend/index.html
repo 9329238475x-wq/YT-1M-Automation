@@ -5,63 +5,57 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>YT-1M Automation</title>
   <style>
-    body{font-family:system-ui,sans-serif;margin:0;background:#0b1020;color:#eef2ff}
-    .wrap{max-width:1100px;margin:auto;padding:32px}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
-    .card{background:#151b2f;border:1px solid #29324d;border-radius:14px;padding:20px}
-    label{display:block;margin:12px 0 6px;color:#aab5d6}
-    select,input{width:100%;box-sizing:border-box;padding:11px;border-radius:9px;border:1px solid #3a4565;background:#0e1426;color:#fff}
-    table{width:100%;border-collapse:collapse;margin-top:10px}th,td{text-align:left;padding:10px;border-bottom:1px solid #29324d}
-    .pill{display:inline-block;padding:4px 9px;border-radius:999px;background:#24304e;color:#cbd5ff;font-size:12px}
-    button{margin-top:14px;padding:11px 16px;border:0;border-radius:9px;background:#6d7cff;color:white;font-weight:700;cursor:pointer}
-    .muted{color:#9aa6c8}
+    body{font-family:system-ui,sans-serif;margin:0;background:#0b1020;color:#eef2ff}.wrap{max-width:1150px;margin:auto;padding:28px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}.card{background:#151b2f;border:1px solid #29324d;border-radius:14px;padding:20px}label{display:block;margin:12px 0 6px;color:#aab5d6}select,input{width:100%;box-sizing:border-box;padding:11px;border-radius:9px;border:1px solid #3a4565;background:#0e1426;color:#fff}table{width:100%;border-collapse:collapse;margin-top:10px}th,td{text-align:left;padding:9px;border-bottom:1px solid #29324d}.pill{display:inline-block;padding:4px 9px;border-radius:999px;background:#24304e;color:#cbd5ff;font-size:12px}button{margin-top:14px;padding:11px 16px;border:0;border-radius:9px;background:#6d7cff;color:white;font-weight:700;cursor:pointer}.muted{color:#9aa6c8}.on{color:#7ee2a8}.off{color:#9aa6c8}.slot{font-weight:800}
   </style>
 </head>
 <body>
 <div class="wrap">
   <h1>YT-1M Automation</h1>
-  <p class="muted">Testing mode — keep generation/upload short until the pipeline is verified.</p>
+  <p class="muted">7-day ambience channel planner • 2 uploads every day • testing mode is capped at 5 minutes.</p>
 
   <div class="grid">
     <section class="card">
-      <h2>Video settings</h2>
-      <label for="duration">Video duration</label>
-      <select id="duration">
-        <option value="1">1 minute</option>
-        <option value="3">3 minutes</option>
-        <option value="5" selected>5 minutes (testing)</option>
-      </select>
-      <p class="muted">Current maximum: <strong>5 minutes</strong>. Production hours can be enabled later without changing the theme engines.</p>
-      <button onclick="saveSettings()">Save settings</button>
+      <h2>Generation settings</h2>
+      <label for="duration">Test video duration</label>
+      <select id="duration"><option value="1">1 minute</option><option value="3">3 minutes</option><option value="5" selected>5 minutes</option></select>
+      <label for="timezone">Timezone</label>
+      <input id="timezone" value="Asia/Kolkata" readonly />
+      <label for="morning">Morning upload</label>
+      <input id="morning" value="07:00 • Ocean / Sea Waves" readonly />
+      <label for="evening">Evening upload</label>
+      <input id="evening" value="19:00 • Rain / Storm Ambience" readonly />
+      <button onclick="saveSettings()">Save testing settings</button>
       <p id="status" class="muted"></p>
     </section>
 
     <section class="card">
-      <h2>Weekly plan</h2>
-      <p><span class="pill">Asia/Kolkata</span> Upload target: <strong>21:00</strong></p>
+      <h2>Weekly content plan</h2>
       <table>
-        <thead><tr><th>Day</th><th>Theme</th><th>Status</th></tr></thead>
-        <tbody>
-          <tr><td>Monday</td><td>Midnight Cabin Heavy Rain</td><td>ON</td></tr>
-          <tr><td>Tuesday</td><td>Rainy Window Night</td><td>OFF</td></tr>
-          <tr><td>Wednesday</td><td>Forest Rain at Midnight</td><td>OFF</td></tr>
-          <tr><td>Thursday</td><td>Heavy Rain on Tin Roof</td><td>OFF</td></tr>
-          <tr><td>Friday</td><td>Distant Thunder Storm</td><td>OFF</td></tr>
-          <tr><td>Saturday</td><td>Cozy Car Rain</td><td>OFF</td></tr>
-          <tr><td>Sunday</td><td>Peaceful Rain for Deep Sleep</td><td>OFF</td></tr>
-        </tbody>
+        <thead><tr><th>Day</th><th>07:00</th><th>19:00</th></tr></thead>
+        <tbody id="plan"></tbody>
       </table>
     </section>
   </div>
+
+  <div class="card" style="margin-top:16px">
+    <h2>Sound design</h2>
+    <p class="muted">Morning videos use a reusable procedural ocean engine: deep surf + rolling waves + shoreline wash + foam + distant wind. Evening videos use the rain engine with rain, roof, ambience and optional distant thunder.</p>
+    <p class="muted">Later, the same frontend duration control can be expanded from 5 minutes to 30m, 1h, 2h and 4h without changing the weekly theme architecture.</p>
+  </div>
 </div>
 <script>
-function saveSettings(){
-  const minutes=document.getElementById('duration').value;
-  localStorage.setItem('yt1m_duration_minutes', minutes);
-  document.getElementById('status').textContent=`Saved: ${minutes} minute test video.`;
-}
-const saved=localStorage.getItem('yt1m_duration_minutes');
-if(saved && ['1','3','5'].includes(saved)) document.getElementById('duration').value=saved;
+const plan=[
+ ['Monday','Calm Sunrise Ocean','Midnight Cabin Heavy Rain'],
+ ['Tuesday','Tropical Beach Morning Waves','Rainy Window Night'],
+ ['Wednesday','Quiet Blue Sea','Forest Rain at Midnight'],
+ ['Thursday','Gentle Shoreline Waves','Heavy Rain on Tin Roof'],
+ ['Friday','Slow Deep Ocean Surf','Distant Thunder Storm'],
+ ['Saturday','Tropical Calm Sea','Cozy Car Rain'],
+ ['Sunday','Peaceful Sunday Beach','Peaceful Rain for Deep Sleep']
+];
+document.getElementById('plan').innerHTML=plan.map(r=>`<tr><td>${r[0]}</td><td><span class="slot">${r[1]}</span></td><td><span class="slot">${r[2]}</span></td></tr>`).join('');
+function saveSettings(){const minutes=document.getElementById('duration').value;localStorage.setItem('yt1m_duration_minutes',minutes);document.getElementById('status').textContent=`Saved: ${minutes} minute test duration. Both daily slots use this cap.`;}
+const saved=localStorage.getItem('yt1m_duration_minutes');if(saved&&['1','3','5'].includes(saved))document.getElementById('duration').value=saved;
 </script>
 </body>
 </html>
