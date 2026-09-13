@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import threading
 import uuid
 from pathlib import Path
 
@@ -11,16 +10,17 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from core.config import load_theme
-from core.audio_engine.master import generate_master_audio
-from core.image_engine.generator import create_generator
-from core.video_engine.ffmpeg_render import render_static_image_video
+from .core.config import load_theme
+from .core.audio_engine.master import generate_master_audio
+from .core.image_engine.generator import create_generator
+from .core.video_engine.ffmpeg_render import render_static_image_video
 
 ROOT = Path(__file__).resolve().parent
 PROJECT = ROOT.parent
 FRONTEND = PROJECT / "frontend"
 OUTPUT = PROJECT / "output"
 TEMP = PROJECT / "temp"
+THEMES = ROOT / "themes"
 SETTINGS = FRONTEND / "settings.json"
 OUTPUT.mkdir(exist_ok=True)
 TEMP.mkdir(exist_ok=True)
@@ -55,7 +55,8 @@ class GeneratePayload(BaseModel):
 def do_generate(job_id: str, theme_id: str, duration_minutes: int, seed: int) -> None:
     try:
         config = load_theme(theme_id)
-        duration_minutes = min(max(int(duration_minutes), 1), 5 if read_settings().get("testing_mode", True) else 240)
+        limit = 5 if read_settings().get("testing_mode", True) else 240
+        duration_minutes = min(max(int(duration_minutes), 1), limit)
         seconds = duration_minutes * 60
         base = f"{theme_id}_{seed}_{uuid.uuid4().hex[:6]}"
         audio_path = TEMP / f"{base}.wav"
@@ -66,13 +67,8 @@ def do_generate(job_id: str, theme_id: str, duration_minutes: int, seed: int) ->
         generate_master_audio(seconds, audio_path, seed, config)
 
         state["jobs"][job_id] = {"status": "generating_image", "theme": config.get("name", theme_id)}
-        image_cfg = config.get("image", {})
-        create_generator("placeholder").generate(
-            config.get("visual", {}).get("scene", config.get("name", theme_id)),
-            int(image_cfg.get("width", 1920)),
-            int(image_cfg.get("height", 1080)),
-            image_path,
-        )
+        scene = config.get("visual", {}).get("scene", config.get("name", theme_id))
+        create_generator("placeholder").generate(scene, 1920, 1080, image_path)
 
         state["jobs"][job_id] = {"status": "rendering_video", "theme": config.get("name", theme_id)}
         render_static_image_video(image_path, audio_path, video_path, seconds)
@@ -128,7 +124,7 @@ def stop() -> dict:
 @app.get("/api/themes")
 def themes() -> list[dict]:
     result = []
-    for path in sorted((ROOT / "themes").glob("*/config.json")):
+    for path in sorted(THEMES.glob("*/config.json")):
         try:
             cfg = json.loads(path.read_text(encoding="utf-8"))
             result.append({"id": cfg["id"], "name": cfg["name"], "type": cfg.get("type", "unknown")})
