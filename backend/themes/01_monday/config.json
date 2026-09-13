@@ -1,0 +1,63 @@
+{
+  "id": "01_monday",
+  "name": "Midnight Cabin Heavy Rain",
+  "enabled": true,
+  "mood": ["peaceful", "dark", "cozy", "sleep", "cinematic"],
+  "audio": {
+    "sample_rate": 48000,
+    "duration_hours": 4,
+    "chunk_minutes": 10,
+    "mix": {
+      "rain": 0.70,
+      "roof": 0.20,
+      "distant": 0.07,
+      "thunder": 0.03
+    },
+    "rain_intensity": {"min": 0.72, "max": 0.95},
+    "roof_resonance": 0.72,
+    "stereo_width": 0.35,
+    "thunder": {
+      "enabled": true,
+      "interval_min_minutes": 5,
+      "interval_max_minutes": 15,
+      "probability": 0.35,
+      "max_level": 0.12
+    }
+  },
+  "image": {
+    "width": 1920,
+    "height": 1080,
+    "provider": "env",
+    "prompt_style": "cinematic photorealistic night ambience",
+    "fog": "dense natural layered mist with depth, foreground and background separation",
+    "negative": ["text", "watermark", "people", "animals", "cartoon", "oversaturated colors"]
+  },
+  "visual": {
+    "fps": 30,
+    "loop_seconds": 20,
+    "rain": {"enabled": true, "density": 0.72, "speed": 0.85},
+    "fog": {"enabled": true, "density": 0.65, "drift_speed": 0.035},
+    "window_light": {"enabled": true, "warmth": 0.78, "flicker_strength": 0.025},
+    "water_ripples": {"enabled": true, "region_start": 0.72, "opacity": 0.18}
+  },
+  "video": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "video_codec": "libx264",
+    "audio_codec": "aac",
+    "crf": 21,
+    "audio_bitrate": "192k"
+  },
+  "youtube": {
+    "category_id": "10",
+    "privacy": "private",
+    "publish_timezone": "Asia/Kolkata",
+    "title_templates": [
+      "Heavy Rain on a Cozy Cabin Roof 🌧️ Deep Sleep Ambience | {hours} Hours",
+      "Midnight Cabin Rain 🌧️ Heavy Rain Sounds for Sleep & Relaxation | {hours} Hours",
+      "Dark Forest Cabin + Heavy Rain 🌧️ Peaceful Sleep Ambience | {hours} Hours"
+    ],
+    "tags": ["heavy rain sounds", "rain sounds for sleep", "cabin rain", "sleep ambience", "rain ambience", "relaxation", "study ambience", "deep sleep"]
+  }
+}
