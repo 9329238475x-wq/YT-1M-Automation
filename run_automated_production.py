@@ -112,11 +112,12 @@ def run_pipeline(
     seed = random.randint(1000, 999999)
     print(f"\n[Step 1/5] Selected Ambience: {theme_name} (Seed: {seed})")
 
-    # 2. Audio Generation
+    # 2. Audio Generation (5-minute rich procedural binaural master, looped seamlessly by FFmpeg)
+    audio_dur = min(total_seconds, 300)
     audio_path = TEMP_DIR / f"{theme_id}_{seed}.wav"
-    print(f"\n[Step 2/5] Generating procedural binaural soundscape ({total_seconds}s)...")
-    generate_master_audio(total_seconds, audio_path, seed, config)
-    print(f"           Audio Ready: {audio_path.name} ({audio_path.stat().st_size:,} bytes)")
+    print(f"\n[Step 2/5] Generating procedural binaural soundscape master ({audio_dur}s block)...")
+    generate_master_audio(audio_dur, audio_path, seed, config)
+    print(f"           Audio Master Ready: {audio_path.name} ({audio_path.stat().st_size:,} bytes)")
 
     # 3. 1080p Real Nature Moving Video Clip
     clip_path = TEMP_DIR / f"clip_{seed}.mp4"
