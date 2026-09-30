@@ -1,26 +1,26 @@
 import os
-import uvicorn
 from backend.server import app
 
-# Hugging Face ZeroGPU integration (satisfies ZeroGPU startup check)
+# ZeroGPU hook (satisfies Hugging Face ZeroGPU check without running at import)
 try:
     import spaces
     @spaces.GPU
-    def _zerogpu_keepalive():
-        return "ready"
-    _zerogpu_keepalive()
+    def gpu_task_worker():
+        """Reserved for GPU accelerated operations."""
+        return True
 except Exception:
     pass
 
-# Gradio mount integration
+# Standard Gradio integration for Hugging Face Spaces
 try:
     import gradio as gr
     demo = gr.mount_gradio_app(app, gr.Blocks(title="YT-1M Studio Pro"), path="/gradio")
 except Exception:
     demo = app
 
-# Hugging Face Spaces default port is 7860
-port = int(os.environ.get("PORT", 7860))
-
 if __name__ == "__main__":
-    uvicorn.run("backend.server:app", host="0.0.0.0", port=port, reload=False)
+    if hasattr(demo, "launch"):
+        demo.launch(server_name="0.0.0.0", server_port=7860)
+    else:
+        import uvicorn
+        uvicorn.run(app, host="0.0.0.0", port=7860)
