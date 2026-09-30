@@ -85,22 +85,32 @@ def cleanup_all():
 
 
 def run_pipeline(
-    duration_hours: float = 8.0,
+    duration_hours: float = 12.0,
     theme_id: str | None = None,
     channel_id: str = "UC3bOKg56B9cc2shqNrAKlxw",
     privacy: str = "public",
     recipient_email: str = "9329238475x@gmail.com",
 ):
     start_time = time.time()
-    total_seconds = int(duration_hours * 3600)
+    base_seconds = int(duration_hours * 3600)
+
+    # Natural duration variation (+1m 15s to +11m 45s)
+    # Ensures no two videos have identical duration, protecting YouTube Monetization
+    random_offset_seconds = random.randint(75, 705)
+    total_seconds = base_seconds + random_offset_seconds
+
+    h = total_seconds // 3600
+    m = (total_seconds % 3600) // 60
+    s = total_seconds % 60
+    dur_exact_timestamp = f"{h:02d}:{m:02d}:{s:02d}"
     dur_display = f"{int(duration_hours)} Hours" if duration_hours >= 1 else f"{int(total_seconds // 60)} Minutes"
 
     print("=" * 75)
     print("YT-1M AUTONOMOUS KAGGLE / CLOUD PRODUCTION RUNNER")
-    print(f"Target Duration : {dur_display} ({total_seconds} seconds)")
-    print(f"Target Channel  : {channel_id}")
-    print(f"Privacy Mode    : {privacy.upper()}")
-    print(f"Alert Email     : {recipient_email}")
+    print(f"Target Duration  : {dur_display} (Exact Runtime: {dur_exact_timestamp} / {total_seconds}s)")
+    print(f"Target Channel   : {channel_id}")
+    print(f"Privacy Mode     : {privacy.upper()}")
+    print(f"Alert Email      : {recipient_email}")
     print("=" * 75)
 
     # 1. Theme Configuration
@@ -204,7 +214,7 @@ def run_pipeline(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="YT-1M Autonomous Production Pipeline")
-    parser.add_argument("--duration_hours", type=float, default=8.0, help="Duration in hours (e.g. 8.0)")
+    parser.add_argument("--duration_hours", type=float, default=12.0, help="Duration in hours (e.g. 12.0)")
     parser.add_argument("--theme", type=str, default="auto", help="Theme ID or 'auto'")
     parser.add_argument("--channel_id", type=str, default="UC3bOKg56B9cc2shqNrAKlxw", help="YouTube Channel ID")
     parser.add_argument("--privacy", type=str, default="public", help="public or private")

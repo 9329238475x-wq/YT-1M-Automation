@@ -17,8 +17,8 @@
       "enabled": true,
       "theme_mode": "all_weekly",
       "theme_id": "01_monday_evening_rain",
-      "duration_hours": 1,
-      "duration_minutes": 60,
+      "duration_hours": 12,
+      "duration_minutes": 720,
       "schedule_type": "daily",
       "days": [
         "mon",
@@ -32,7 +32,7 @@
       "upload_time": "18:00",
       "privacy": "public"
     },
-    "updated_at": "2026-09-29T03:55:18.066058",
+    "updated_at": "2026-09-30T21:28:35.738825",
     "last_upload_at": "2026-09-29T03:28:56.127675",
     "last_uploaded_video_id": "bgdc_tp_cpA",
     "last_uploaded_video_title": "Midnight Cabin Heavy Rain | Rain Sounds for Deep Sleep, Relax & Study [1 Minutes]"
