@@ -1,0 +1,62 @@
+name: YT-1M 2X Daily USA Production (Kaggle Cloud Runner)
+
+on:
+  schedule:
+    # 1. USA Morning Slot (6:30 AM EST New York / 10:30 AM UTC / 4:00 PM IST) -> Morning Ocean Waves
+    - cron: '30 10 * * *'
+    # 2. USA Evening Bedtime Slot (8:00 PM EST New York / 00:00 UTC / 5:30 AM IST) -> Evening Sleep Rain
+    - cron: '0 0 * * *'
+
+  workflow_dispatch:
+    inputs:
+      slot:
+        description: 'Target Slot (auto, morning = Ocean, evening = Rain)'
+        required: true
+        default: 'auto'
+        type: choice
+        options:
+          - auto
+          - morning
+          - evening
+      duration_hours:
+        description: 'Video Duration (Hours)'
+        required: true
+        default: '12.0'
+      privacy:
+        description: 'YouTube Video Privacy (public or private)'
+        required: true
+        default: 'public'
+        type: choice
+        options:
+          - public
+          - private
+          - unlisted
+
+jobs:
+  trigger-kaggle-cloud-production:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Kaggle CLI
+        run: |
+          pip install --upgrade kaggle requests
+
+      - name: Configure Kaggle API Credentials
+        env:
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME || 'sonuji93' }}
+          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY || '30359df27329878ca4326b93196c3d59' }}
+        run: |
+          mkdir -p ~/.kaggle
+          echo "{\"username\":\"$KAGGLE_USERNAME\",\"key\":\"$KAGGLE_KEY\"}" > ~/.kaggle/kaggle.json
+          chmod 600 ~/.kaggle/kaggle.json
+
+      - name: Deploy & Trigger Kaggle Autonomous Runner
+        run: |
+          python push_to_kaggle.py

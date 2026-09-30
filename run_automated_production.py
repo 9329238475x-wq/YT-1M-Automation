@@ -51,21 +51,51 @@ from youtube_manager import upload_video_to_channel, load_channels
 from notifier import send_upload_success_email
 
 
-def auto_select_daily_theme() -> str:
-    """Selects theme based on day of week or picks randomly from weekly themes."""
-    day_map = {
-        0: "01_monday_evening_rain",
-        1: "02_tuesday_deep_thunder",
-        2: "03_wednesday_cozy_cabin_rain",
-        3: "04_thursday_rain_on_window",
-        4: "05_friday_tin_roof_rain",
-        5: "06_saturday_forest_gentle_rain",
-        6: "07_sunday_night_sleep_rain",
+from datetime import datetime, timezone
+
+
+def auto_select_daily_theme(slot: str = "auto") -> tuple[str, str]:
+    """
+    Selects theme based on USA target time & day of the week:
+      - Morning Slot (USA 6:00 AM - 12:00 PM) -> Morning Ocean Waves & Sunrise Meditation
+      - Evening Slot (USA 7:00 PM - 11:00 PM) -> Evening Deep Rain & Night Sleep Thunder
+    """
+    now_utc = datetime.now(timezone.utc)
+    # Target USA Eastern Time (New York / EDT = UTC - 4)
+    us_hour = (now_utc.hour - 4) % 24
+
+    if slot not in ["morning", "evening"]:
+        # Auto-detect based on US Eastern daytime vs evening/night
+        slot = "morning" if (5 <= us_hour < 14) else "evening"
+
+    today_idx = now_utc.weekday()
+
+    ocean_map = {
+        0: "01_monday_morning_ocean",
+        1: "02_tuesday_morning_ocean",
+        2: "03_wednesday_morning_ocean",
+        3: "04_thursday_morning_ocean",
+        4: "05_friday_morning_ocean",
+        5: "06_saturday_morning_ocean",
+        6: "07_sunday_morning_ocean",
     }
-    today_idx = datetime.now().weekday()
-    theme_id = day_map.get(today_idx, "01_monday_evening_rain")
-    print(f"[Theme Selection] Today is day {today_idx} -> Theme: {theme_id}")
-    return theme_id
+
+    rain_map = {
+        0: "01_monday_evening_rain",
+        1: "02_tuesday_evening_rain",
+        2: "03_wednesday_evening_rain",
+        3: "04_thursday_evening_rain",
+        4: "05_friday_evening_rain",
+        5: "06_saturday_evening_rain",
+        6: "07_sunday_evening_rain",
+    }
+
+    theme_id = ocean_map.get(today_idx, "01_monday_morning_ocean") if slot == "morning" else rain_map.get(today_idx, "01_monday_evening_rain")
+    slot_label = "MORNING SUNRISE OCEAN" if slot == "morning" else "EVENING DEEP SLEEP RAIN"
+    print(f"\n[USA Smart Target] US Eastern Time: {us_hour:02d}:{now_utc.minute:02d}")
+    print(f"                   Scheduled Slot : {slot_label}")
+    print(f"                   Selected Theme : {theme_id} (Day {today_idx})")
+    return theme_id, slot
 
 
 def cleanup_all():
@@ -87,6 +117,7 @@ def cleanup_all():
 def run_pipeline(
     duration_hours: float = 12.0,
     theme_id: str | None = None,
+    slot: str = "auto",
     channel_id: str = "UC3bOKg56B9cc2shqNrAKlxw",
     privacy: str = "public",
     recipient_email: str = "9329238475x@gmail.com",
@@ -114,23 +145,26 @@ def run_pipeline(
     except Exception:
         pass
 
-    print("=" * 75)
-    print("YT-1M AUTONOMOUS KAGGLE / CLOUD PRODUCTION RUNNER")
-    print(f"Target Duration  : {dur_display} (Exact Runtime: {dur_exact_timestamp} / {total_seconds}s)")
-    print(f"Target Channel   : {channel_id}")
-    print(f"Hardware Engine  : {hw_mode} (Automatic Fallback Active)")
-    print(f"Privacy Mode     : {privacy.upper()}")
-    print(f"Alert Email      : {recipient_email}")
-    print("=" * 75)
-
-    # 1. Theme Configuration
+    # 1. Theme Configuration & USA Slot Resolution
     if not theme_id or theme_id == "auto":
-        theme_id = auto_select_daily_theme()
+        theme_id, resolved_slot = auto_select_daily_theme(slot=slot)
+    else:
+        resolved_slot = "custom"
 
     config = load_theme(theme_id)
     theme_name = config.get("name", theme_id)
     seed = random.randint(1000, 999999)
-    print(f"\n[Step 1/5] Selected Ambience: {theme_name} (Seed: {seed})")
+
+    print("=" * 75)
+    print("YT-1M AUTONOMOUS KAGGLE / CLOUD PRODUCTION RUNNER (USA 2X DAILY ENGINE)")
+    print(f"Target Duration  : {dur_display} (Exact Runtime: {dur_exact_timestamp} / {total_seconds}s)")
+    print(f"Target Channel   : {channel_id}")
+    print(f"Production Slot  : {resolved_slot.upper()}")
+    print(f"Ambience Theme   : {theme_name} (Seed: {seed})")
+    print(f"Hardware Engine  : {hw_mode} (Automatic Fallback Active)")
+    print(f"Privacy Mode     : {privacy.upper()}")
+    print(f"Alert Email      : {recipient_email}")
+    print("=" * 75)
 
     # 2. Audio Generation (5-minute rich procedural binaural master, looped seamlessly by FFmpeg)
     audio_dur = min(total_seconds, 300)
@@ -226,6 +260,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="YT-1M Autonomous Production Pipeline")
     parser.add_argument("--duration_hours", type=float, default=12.0, help="Duration in hours (e.g. 12.0)")
     parser.add_argument("--theme", type=str, default="auto", help="Theme ID or 'auto'")
+    parser.add_argument("--slot", type=str, default="auto", choices=["auto", "morning", "evening"], help="Target slot: morning (ocean) or evening (rain)")
     parser.add_argument("--channel_id", type=str, default="UC3bOKg56B9cc2shqNrAKlxw", help="YouTube Channel ID")
     parser.add_argument("--privacy", type=str, default="public", help="public or private")
     parser.add_argument("--recipient_email", type=str, default="9329238475x@gmail.com", help="Notification Email")
@@ -234,6 +269,7 @@ if __name__ == "__main__":
     run_pipeline(
         duration_hours=args.duration_hours,
         theme_id=args.theme,
+        slot=args.slot,
         channel_id=args.channel_id,
         privacy=args.privacy,
         recipient_email=args.recipient_email,
