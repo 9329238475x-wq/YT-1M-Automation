@@ -123,11 +123,22 @@ def generate_natural_distant_thunder(
     track = np.zeros((n, 2), dtype=np.float32)
 
     # First event hits early for instant audition in test lab
-    event_times = [float(rng.uniform(4.8, 6.2))]
-    cur = event_times[0] + float(rng.uniform(38.0, 62.0))
+    event_times = [float(rng.uniform(4.8, 8.5))]
+    cur = event_times[0] + float(rng.uniform(15.0, 35.0))
     while cur < (seconds - 6.0):
         event_times.append(cur)
-        cur += float(rng.uniform(38.0, 68.0))
+        # Organic stochastic weather:
+        # 35% cluster burst (next rumble right after: 9s - 22s)
+        # 45% active interval (26s - 55s)
+        # 20% gentle rain lull (65s - 120s)
+        roll = float(rng.uniform(0.0, 1.0))
+        if roll < 0.35:
+            gap = float(rng.uniform(9.0, 22.0))
+        elif roll < 0.80:
+            gap = float(rng.uniform(26.0, 55.0))
+        else:
+            gap = float(rng.uniform(65.0, 120.0))
+        cur += gap
 
     for ev in event_times:
         start_idx = int(ev * sr)
@@ -143,8 +154,9 @@ def generate_natural_distant_thunder(
         if data.ndim == 1:
             data = np.stack([data, data], axis=1)
 
-        # Distant atmospheric slowdown (deep pitch, slow roll)
-        speed = float(rng.uniform(0.82, 0.88))
+        # Distant atmospheric slowdown (deep pitch, slow roll, varied)
+        speed = float(rng.uniform(0.79, 0.92))
+        vol_scale = float(rng.uniform(0.70, 1.0))
         eff_sr = file_sr * speed
         n_out = int(len(data) * sr / eff_sr)
         if n_out <= 0:
@@ -185,8 +197,8 @@ def generate_natural_distant_thunder(
 
         strike = np.stack([out_l, out_r], axis=1).astype(np.float32)
         peak = max(float(np.max(np.abs(strike))), 1e-6)
-        # Controlled amplitude so thunder stays in the background
-        strike = (strike / peak) * 0.46
+        # Controlled amplitude with dynamic distance variation
+        strike = (strike / peak) * 0.46 * vol_scale
 
         strike_len = min(len(strike), n - start_idx)
         track[start_idx : start_idx + strike_len] += strike[:strike_len]

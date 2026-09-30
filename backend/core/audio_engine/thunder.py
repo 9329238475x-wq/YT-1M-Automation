@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 from pathlib import Path
 import numpy as np
@@ -119,14 +119,25 @@ def generate_thunder(
         if seconds >= 8.0:
             event_times.append(3.8)
     else:
-        # In full production audio: periodic majestic rolls
-        cfg = thunder_cfg or {}
-        min_sec = float(cfg.get("interval_min_minutes", 2.0)) * 60.0
-        max_sec = float(cfg.get("interval_max_minutes", 4.5)) * 60.0
-        cur = float(rng.uniform(30.0, 75.0))
-        while cur < (seconds - 15.0):
+        # Dynamic Nature Storm Physics (Organic unpredictable intervals)
+        # First thunder rumble starts naturally between 15s to 45s
+        cur = float(rng.uniform(15.0, 45.0))
+        while cur < (seconds - 12.0):
             event_times.append(cur)
-            cur += float(rng.uniform(min_sec, max_sec))
+
+            # Stochastic weather pattern (unpredictable natural clouds):
+            # 35% chance: Cluster strike (Next strike happens quickly right after: 8s - 22s)
+            # 45% chance: Active storm interval (28s - 65s)
+            # 20% chance: Natural gentle lull (75s - 140s)
+            rand_roll = float(rng.uniform(0.0, 1.0))
+            if rand_roll < 0.35:
+                gap = float(rng.uniform(8.0, 22.0))
+            elif rand_roll < 0.80:
+                gap = float(rng.uniform(28.0, 65.0))
+            else:
+                gap = float(rng.uniform(75.0, 140.0))
+
+            cur += gap
 
     for ev_time in event_times:
         start_idx = int(ev_time * sample_rate)
@@ -134,10 +145,11 @@ def generate_thunder(
             break
 
         filename = available[rng.integers(0, len(available))]
-        speed = float(rng.uniform(0.86, 0.90))
-        pan = float(rng.uniform(0.25, 0.75))
+        speed = float(rng.uniform(0.80, 0.94))
+        pan = float(rng.uniform(0.15, 0.85))
+        volume_scale = float(rng.uniform(0.68, 1.0))
 
-        strike = _load_and_process_strike(filename, sample_rate, speed, pan, rng)
+        strike = _load_and_process_strike(filename, sample_rate, speed, pan, rng) * volume_scale
         strike_len = min(len(strike), n - start_idx)
 
         track[start_idx : start_idx + strike_len] += strike[:strike_len]
