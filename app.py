@@ -1,26 +1,33 @@
 import os
+import sys
+import socket
+
+print("=== STARTUP ENV CHECK ===", flush=True)
+print(f"Python: {sys.version}", flush=True)
+print(f"PORT env var: {os.environ.get('PORT')}", flush=True)
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+res = s.connect_ex(('127.0.0.1', 7860))
+print(f"Is port 7860 already in use?: {res == 0}", flush=True)
+s.close()
+
 from backend.server import app
 
-# ZeroGPU hook (satisfies Hugging Face ZeroGPU check without running at import)
+# ZeroGPU hook
 try:
     import spaces
     @spaces.GPU
     def gpu_task_worker():
-        """Reserved for GPU accelerated operations."""
         return True
 except Exception:
     pass
 
-# Standard Gradio integration for Hugging Face Spaces
-try:
-    import gradio as gr
-    demo = gr.mount_gradio_app(app, gr.Blocks(title="YT-1M Studio Pro"), path="/gradio")
-except Exception:
-    demo = app
+import uvicorn
+# Use PORT or 7860
+port = int(os.environ.get("PORT", 7860))
+if res == 0:
+    print("Port 7860 was already in use! Trying port 7861...", flush=True)
+    port = 7861
 
 if __name__ == "__main__":
-    if hasattr(demo, "launch"):
-        demo.launch(server_name="0.0.0.0", server_port=7860)
-    else:
-        import uvicorn
-        uvicorn.run(app, host="0.0.0.0", port=7860)
+    uvicorn.run(app, host="0.0.0.0", port=port)

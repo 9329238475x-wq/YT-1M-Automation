@@ -306,6 +306,16 @@ def get_channel_credentials(channel_id: str) -> Optional[Credentials]:
     """Loads Credentials for a channel, automatically refreshing if needed."""
     token_file = TOKENS_DIR / f"token_{channel_id}.json"
     if not token_file.exists():
+        env_token = os.getenv("YOUTUBE_CHANNEL_TOKEN_JSON", "").strip()
+        if env_token:
+            try:
+                TOKENS_DIR.mkdir(parents=True, exist_ok=True)
+                token_file.write_text(env_token, encoding="utf-8")
+                logger.info(f"Restored {token_file.name} from YOUTUBE_CHANNEL_TOKEN_JSON env var.")
+            except Exception as e:
+                logger.warning(f"Could not restore token from env var: {e}")
+
+    if not token_file.exists():
         return None
     try:
         creds = Credentials.from_authorized_user_file(str(token_file), SCOPES)

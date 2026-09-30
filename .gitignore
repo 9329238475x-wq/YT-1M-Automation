@@ -34,9 +34,15 @@ client_secrets.json
 temp/*.wav
 temp/*.mp4
 output/*.mp4
+Assets/videos/*.mp4
+!Assets/videos/.gitkeep
 
 # OS and Editor
 .DS_Store
 Thumbs.db
+
+# Kaggle local secrets deploy cache
+kaggle_deploy/
+kaggle_output/
 .vscode/
 .idea/
