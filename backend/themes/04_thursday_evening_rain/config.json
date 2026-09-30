@@ -1,0 +1,47 @@
+{
+  "id": "04_thursday_evening_rain",
+  "name": "Heavy Rain on Tin Roof",
+  "type": "rain",
+  "enabled": true,
+  "duration_minutes": 5,
+  "audio": {
+    "engine": "tin_roof_rain",
+    "mix": {
+      "roof": 0.65,
+      "outdoor_rain": 0.2,
+      "distant_thunder": 0.48,
+      "breeze": 0.08
+    },
+    "rain_intensity": {
+      "min": 0.78,
+      "max": 0.98
+    },
+    "roof_resonance": 0.88,
+    "description": "Heavy rain on tin roof, small and big drops naturally mixed, periodic intensity surges, subtle background rain, distant cushioned thunder, prominent roof sound.",
+    "thunder": {
+      "enabled": true,
+      "cushioned": true,
+      "first_strike_seconds": 5.0,
+      "min_gap_seconds": 26.0,
+      "max_gap_seconds": 48.0
+    }
+  },
+  "visual": {
+    "scene": "small countryside house, corrugated metal roof, heavy rain, warm lamp",
+    "fps": 30,
+    "loop_seconds": 20
+  },
+  "youtube": {
+    "category_id": "10",
+    "privacy": "private",
+    "publish_time": "19:00",
+    "title": "Heavy Rain on a Tin Roof 🌧️ Cozy Sleep Sounds | {duration} Minutes",
+    "tags": [
+      "tin roof rain",
+      "heavy rain",
+      "rain sounds for sleep",
+      "cozy rain",
+      "sleep ambience"
+    ]
+  }
+}

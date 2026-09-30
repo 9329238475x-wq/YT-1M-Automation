@@ -1,0 +1,17 @@
+{
+  "engine": "procedural_ocean",
+  "description": "Natural layered ocean ambience using multiple wave bands, shoreline wash, foam and distant low-frequency surf.",
+  "sample_rate": 48000,
+  "layers": {
+    "deep_surf": 0.32,
+    "rolling_waves": 0.38,
+    "shore_wash": 0.20,
+    "foam_hiss": 0.07,
+    "distant_wind": 0.03
+  },
+  "wave_interval_seconds": {"min": 4, "max": 14},
+  "variation": 0.35,
+  "stereo_width": 0.55,
+  "seamless_loop": true,
+  "master_lufs": -16
+}

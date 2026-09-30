@@ -1,0 +1,40 @@
+[
+  {
+    "id": "UC3bOKg56B9cc2shqNrAKlxw",
+    "title": "MAN 709",
+    "custom_url": "@man709-w6v",
+    "description": "hy everyone please enjoy this video 🤩",
+    "thumbnail": "https://yt3.ggpht.com/AJQlrOshiNeQf66x3YmRgna_uM_LhdISm5PNmnBVcJhwQkL1usuQwSyLKk_WwExf-1hMJemuHbE=s800-c-k-c0x00ffffff-no-rj",
+    "subscriber_count": "0",
+    "video_count": "3",
+    "tool_uploads_count": 1,
+    "connected_at": "2026-09-29T03:01:02.514243",
+    "last_connected": "2026-09-29T03:01:02.514243",
+    "token_file": "backend/tokens/token_UC3bOKg56B9cc2shqNrAKlxw.json",
+    "status": "connected",
+    "owner_email": "9329238475x@gmail.com",
+    "automation": {
+      "enabled": true,
+      "theme_mode": "all_weekly",
+      "theme_id": "01_monday_evening_rain",
+      "duration_hours": 1,
+      "duration_minutes": 60,
+      "schedule_type": "daily",
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat",
+        "sun"
+      ],
+      "upload_time": "18:00",
+      "privacy": "public"
+    },
+    "updated_at": "2026-09-29T03:55:18.066058",
+    "last_upload_at": "2026-09-29T03:28:56.127675",
+    "last_uploaded_video_id": "bgdc_tp_cpA",
+    "last_uploaded_video_title": "Midnight Cabin Heavy Rain | Rain Sounds for Deep Sleep, Relax & Study [1 Minutes]"
+  }
+]

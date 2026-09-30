@@ -1,0 +1,39 @@
+{
+  "timezone": "Asia/Kolkata",
+  "testing": {"enabled": true, "max_duration_minutes": 5},
+  "uploads_per_day": 2,
+  "slots": [
+    {"time": "07:00", "type": "ocean", "label": "Morning Ocean Waves"},
+    {"time": "19:00", "type": "rain", "label": "Evening Rain Ambience"}
+  ],
+  "days": {
+    "monday": {
+      "07:00": "01_monday_morning_ocean",
+      "19:00": "01_monday_evening_rain"
+    },
+    "tuesday": {
+      "07:00": "02_tuesday_morning_ocean",
+      "19:00": "02_tuesday_evening_rain"
+    },
+    "wednesday": {
+      "07:00": "03_wednesday_morning_ocean",
+      "19:00": "03_wednesday_evening_rain"
+    },
+    "thursday": {
+      "07:00": "04_thursday_morning_ocean",
+      "19:00": "04_thursday_evening_rain"
+    },
+    "friday": {
+      "07:00": "05_friday_morning_ocean",
+      "19:00": "05_friday_evening_rain"
+    },
+    "saturday": {
+      "07:00": "06_saturday_morning_ocean",
+      "19:00": "06_saturday_evening_rain"
+    },
+    "sunday": {
+      "07:00": "07_sunday_morning_ocean",
+      "19:00": "07_sunday_evening_rain"
+    }
+  }
+}

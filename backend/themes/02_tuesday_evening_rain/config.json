@@ -1,0 +1,49 @@
+{
+  "id": "02_tuesday_evening_rain",
+  "name": "Rainy Window Night",
+  "type": "rain",
+  "enabled": true,
+  "duration_minutes": 5,
+  "audio": {
+    "engine": "window_rain",
+    "sample_rate": 48000,
+    "duration_hours": 4,
+    "chunk_minutes": 10,
+    "mix": {
+      "rain": 0.54,
+      "glass": 0.28,
+      "thunder": 0.22,
+      "wind": 0.1
+    },
+    "swells": {
+      "enabled": true,
+      "cycle_seconds": 24
+    },
+    "distant_thunder": {
+      "enabled": true,
+      "filter_cutoff_hz": 280,
+      "interval_min_minutes": 3.5,
+      "interval_max_minutes": 6.0
+    }
+  },
+  "visual": {
+    "scene": "city apartment window at night, rain streaks on glass, soft warm room light",
+    "fps": 30,
+    "loop_seconds": 20
+  },
+  "youtube": {
+    "category_id": "10",
+    "privacy": "private",
+    "publish_time": "19:00",
+    "title": "Rainy Window at Night • Relaxing Rain Sounds for Sleep | {duration} Minutes",
+    "tags": [
+      "rain on window",
+      "rain sounds",
+      "night rain",
+      "sleep sounds",
+      "relaxing rain",
+      "window rain",
+      "deep sleep rain"
+    ]
+  }
+}

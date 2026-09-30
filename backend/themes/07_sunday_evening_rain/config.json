@@ -1,0 +1,46 @@
+{
+  "id": "07_sunday_evening_rain",
+  "name": "Peaceful Rain for Deep Sleep",
+  "type": "rain",
+  "enabled": true,
+  "duration_minutes": 5,
+  "audio": {
+    "engine": "peaceful_sleep_rain",
+    "mix": {
+      "peaceful_sleep_rain": 0.75,
+      "rare_distant_thunder": 0.28,
+      "subtle_breeze": 0.05
+    },
+    "rain_intensity": {
+      "min": 0.55,
+      "max": 0.76
+    },
+    "roof_resonance": 0.35,
+    "description": "The most peaceful and sleep-oriented rain across the entire week, velvety soft continuous rain, ultra-slow organic intensity drift, rare and distant cushioned thunder, subtle breeze, deeply hypnotic.",
+    "thunder": {
+      "enabled": true,
+      "rare": true,
+      "first_strike_seconds": 5.2,
+      "min_gap_seconds": 50.0,
+      "max_gap_seconds": 95.0
+    }
+  },
+  "visual": {
+    "scene": "cozy dark bedroom beside a rainy forest, soft warm light, gentle fog",
+    "fps": 30,
+    "loop_seconds": 20
+  },
+  "youtube": {
+    "category_id": "10",
+    "privacy": "private",
+    "publish_time": "19:00",
+    "title": "Peaceful Rain for Deep Sleep 🌧️ Relaxing Night Ambience | {duration} Minutes",
+    "tags": [
+      "deep sleep rain",
+      "peaceful rain",
+      "rain sounds for sleep",
+      "night ambience",
+      "relaxation"
+    ]
+  }
+}

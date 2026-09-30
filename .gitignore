@@ -1,0 +1,42 @@
+# Environment & Virtual Environments
+.env
+.venv/
+venv/
+ENV/
+
+# Python Cache & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+
+# Build, Output and Temporary Rendering Files
+output/*
+!output/.gitkeep
+temp/*
+!temp/.gitkeep
+logs/*
+metadata/runtime/*
+*.trf
+
+# Personal YouTube OAuth Tokens & Sessions
+backend/tokens/*
+!backend/tokens/.gitkeep
+backend/oauth_pending_states.json
+backend/oauth_user_states.json
+backend/sessions.json
+backend/jobs_status.json
+token.json
+credentials.json
+client_secrets.json
+
+# Audio & Video Render Intermediates
+temp/*.wav
+temp/*.mp4
+output/*.mp4
+
+# OS and Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

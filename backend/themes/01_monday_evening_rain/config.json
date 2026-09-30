@@ -1,0 +1,50 @@
+{
+  "id": "01_monday_evening_rain",
+  "name": "Midnight Cabin Heavy Rain",
+  "type": "rain",
+  "enabled": true,
+  "duration_minutes": 5,
+  "audio": {
+    "engine": "cabin_rain",
+    "sample_rate": 48000,
+    "duration_hours": 4,
+    "chunk_minutes": 10,
+    "mix": {
+      "rain": 0.58,
+      "roof": 0.22,
+      "wind": 0.16,
+      "thunder": 0.26
+    },
+    "rain_intensity": 0.88,
+    "roof_resonance": 0.75,
+    "distant_thunder": {
+      "enabled": true,
+      "filter_cutoff_hz": 340,
+      "interval_min_minutes": 3.5,
+      "interval_max_minutes": 6.5
+    },
+    "wind": {
+      "enabled": true,
+      "sub_freq_min": 38,
+      "sub_freq_max": 155
+    }
+  },
+  "visual": {
+    "scene": "dark cozy forest cabin at night, warm window light, heavy rain, natural fog",
+    "fps": 30,
+    "loop_seconds": 20
+  },
+  "youtube": {
+    "category_id": "10",
+    "privacy": "private",
+    "publish_time": "19:00",
+    "title": "Midnight Cabin Heavy Rain 🌧️ Sleep & Relaxation | {duration} Minutes",
+    "tags": [
+      "heavy rain sounds",
+      "rain sounds for sleep",
+      "cabin rain",
+      "sleep ambience",
+      "rain ambience"
+    ]
+  }
+}

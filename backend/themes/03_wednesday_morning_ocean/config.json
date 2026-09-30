@@ -1,0 +1,40 @@
+{
+  "id": "03_wednesday_morning_ocean",
+  "name": "Quiet Blue Sea",
+  "type": "ocean",
+  "enabled": true,
+  "duration_minutes": 5,
+  "audio": {
+    "engine": "quiet_blue_sea",
+    "mood": "minimal, meditative, spacious",
+    "layers": {
+      "deep_surf": 0.36,
+      "rolling_waves": 0.34,
+      "shore_wash": 0.22,
+      "foam_hiss": 0.05,
+      "distant_wind": 0.03
+    },
+    "wave_interval_seconds": {
+      "min": 7,
+      "max": 14
+    },
+    "description": "Quiet blue sea, prominent deep ocean body, minimal subtle shore wash, zero high-frequency hiss, long wave intervals, meditative and focused."
+  },
+  "visual": {
+    "scene": "wide quiet blue sea under soft morning sky, empty shoreline",
+    "fps": 30,
+    "loop_seconds": 20
+  },
+  "youtube": {
+    "category_id": "10",
+    "privacy": "private",
+    "publish_time": "07:00",
+    "title": "Quiet Blue Sea 🌊 Deep Relaxation Ocean Waves | {duration} Minutes",
+    "tags": [
+      "quiet ocean",
+      "blue sea sounds",
+      "ocean ambience",
+      "meditation sounds"
+    ]
+  }
+}

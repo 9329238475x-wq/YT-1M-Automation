@@ -1,0 +1,49 @@
+{
+  "id": "03_wednesday_evening_rain",
+  "name": "Forest Rain at Midnight",
+  "type": "rain",
+  "enabled": true,
+  "duration_minutes": 5,
+  "audio": {
+    "engine": "forest_rain",
+    "sample_rate": 48000,
+    "duration_hours": 4,
+    "chunk_minutes": 10,
+    "mix": {
+      "rain": 0.44,
+      "foliage": 0.22,
+      "wind": 0.14,
+      "thunder": 0.52
+    },
+    "density_cycle": {
+      "enabled": true,
+      "cycle_seconds": 26
+    },
+    "distant_thunder": {
+      "enabled": true,
+      "filter_cutoff_hz": 420,
+      "interval_min_minutes": 4.0,
+      "interval_max_minutes": 7.0
+    }
+  },
+  "visual": {
+    "scene": "deep forest at midnight, wet trees, mist, subtle distant lightning",
+    "fps": 30,
+    "loop_seconds": 20
+  },
+  "youtube": {
+    "category_id": "10",
+    "privacy": "private",
+    "publish_time": "19:00",
+    "title": "Forest Rain at Midnight • Dark Nature Ambience for Deep Sleep | {duration} Minutes",
+    "tags": [
+      "forest rain",
+      "rain ambience",
+      "dark ambience",
+      "night rain",
+      "sleep sounds",
+      "midnight forest",
+      "relaxing forest rain"
+    ]
+  }
+}

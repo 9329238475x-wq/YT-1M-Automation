@@ -1,0 +1,40 @@
+{
+  "id": "06_saturday_morning_ocean",
+  "name": "Tropical Calm Sea",
+  "type": "ocean",
+  "enabled": true,
+  "duration_minutes": 5,
+  "audio": {
+    "engine": "tropical_calm_sea",
+    "mood": "holiday, tropical, peaceful",
+    "layers": {
+      "deep_surf": 0.22,
+      "rolling_waves": 0.45,
+      "shore_wash": 0.26,
+      "foam_hiss": 0.05,
+      "distant_wind": 0.02
+    },
+    "wave_interval_seconds": {
+      "min": 4,
+      "max": 11
+    },
+    "description": "Tropical calm sea, daytime tropical beach, natural mix of small laps and medium breakers, smooth beach wash, warm soft sea breeze, wide pleasant stereo panorama."
+  },
+  "visual": {
+    "scene": "sunny tropical coastline, gentle turquoise waves, soft palms",
+    "fps": 30,
+    "loop_seconds": 20
+  },
+  "youtube": {
+    "category_id": "10",
+    "privacy": "private",
+    "publish_time": "07:00",
+    "title": "Tropical Calm Sea 🌴🌊 Relaxing Beach Waves | {duration} Minutes",
+    "tags": [
+      "tropical ocean",
+      "beach waves",
+      "sea ambience",
+      "relaxing waves"
+    ]
+  }
+}

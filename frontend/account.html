@@ -1,0 +1,2609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YT-1M Studio | Multi-Channel Hub</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #000000;
+      --sidebar-bg: #070707;
+      --card-bg: #0c0c0c;
+      --card-surface: #121212;
+      --border: #1f1f1f;
+      --border-light: #2d2d2d;
+      --text: #ffffff;
+      --text-muted: #8e8e93;
+      --text-dim: #555555;
+      --accent: #ff0033;
+      --accent-glow: rgba(255, 0, 51, 0.4);
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%;
+      max-width: 100vw;
+      overflow-x: hidden !important;
+      position: relative;
+      -webkit-text-size-adjust: 100%;
+    }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+    /* Navbar locked at top */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      background: #ffffff;
+      color: #000000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 16px;
+      box-shadow: 0 0 16px rgba(255, 255, 255, 0.35);
+    }
+    .brand-title-wrap {
+      display: flex;
+      flex-direction: column;
+    }
+    .brand-name {
+      font-size: 13px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.01em;
+    }
+    .brand-badge {
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 1px 6px;
+      border-radius: var(--radius-full);
+      background: #141414;
+      border: 1px solid #333333;
+      color: #aaaaaa;
+      align-self: flex-start;
+      margin-top: 2px;
+    }
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .nav-item {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 16px;
+      border-radius: 9999px;
+    }
+    .nav-item:hover { color: #ffffff; text-decoration: none; }
+    .nav-item.active {
+      color: #0b0f19 !important;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(235, 240, 248, 0.9) 100%);
+      backdrop-filter: blur(16px);
+      font-weight: 800;
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-top: 1.5px solid #ffffff;
+      border-bottom: 1.5px solid rgba(180, 195, 215, 0.8);
+      box-shadow: 
+        0 6px 18px rgba(0, 0, 0, 0.5),
+        0 0 14px rgba(255, 255, 255, 0.35),
+        inset 0 1.5px 1.2px #ffffff,
+        inset 0 -2px 3px rgba(140, 160, 185, 0.5);
+    }
+    .nav-item.active svg {
+      stroke: #0b0f19;
+    }
+    .page-container {
+      padding: 28px 36px 80px;
+      max-width: 1360px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    .page-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .page-header-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 34px 24px 44px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .footer-link {
+      color: var(--text-muted);
+      font-weight: 500;
+      font-size: 12px;
+      text-decoration: none;
+    }
+    .footer-link:hover { color: #ffffff; text-decoration: underline; }
+
+    /* ================= CHANNEL AVATAR BAR (STORY ROW) ================= */
+    .avatar-bar-card {
+      background: linear-gradient(180deg, #111111 0%, #060606 100%);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px 20px;
+      margin-bottom: 28px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 12px 32px rgba(0,0,0,0.85);
+    }
+    .avatar-bar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+    .avatar-bar-title {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #888888;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .avatar-track {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      overflow-x: auto;
+      padding: 6px 4px 12px 4px;
+      scrollbar-width: thin;
+      scrollbar-color: #222 #060606;
+    }
+    .avatar-track::-webkit-scrollbar { height: 6px; }
+    .avatar-track::-webkit-scrollbar-thumb { background: #222; border-radius: 4px; }
+
+    /* Circular Avatar Items */
+    .channel-avatar-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      flex-shrink: 0;
+      user-select: none;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .channel-avatar-node:hover {
+      transform: translateY(-3px);
+    }
+    .avatar-circle-ring {
+      width: 86px;
+      height: 86px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0f0f0f;
+      border: 2.5px solid #282828;
+      position: relative;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.75);
+    }
+    .channel-avatar-node:hover .avatar-circle-ring {
+      border-color: #666666;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.95);
+      transform: translateY(-2px);
+    }
+    .channel-avatar-node.active .avatar-circle-ring {
+      border-color: #ff0033;
+      box-shadow: 0 0 0 4px rgba(255, 0, 51, 0.3), 0 0 30px rgba(255, 0, 51, 0.65), inset 0 0 16px rgba(255, 0, 51, 0.2);
+      transform: scale(1.08);
+    }
+    .avatar-circle-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .avatar-circle-fallback {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #2a080d 0%, #120306 60%, #060102 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      font-weight: 900;
+      color: #ff334b;
+      letter-spacing: -0.02em;
+      text-shadow: 0 0 16px rgba(255, 51, 75, 0.5);
+    }
+    .avatar-status-dot {
+      position: absolute;
+      bottom: 3px;
+      right: 3px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #10b981;
+      border: 2.5px solid #000000;
+      box-shadow: 0 0 10px #10b981;
+    }
+    .avatar-node-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #888888;
+      max-width: 100px;
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      transition: color 0.15s ease;
+    }
+    .channel-avatar-node.active .avatar-node-title {
+      color: #ffffff;
+      font-weight: 800;
+    }
+    .channel-avatar-node:hover .avatar-node-title {
+      color: #ffffff;
+    }
+
+    /* Big (+) Add Button */
+    .avatar-add-btn .avatar-circle-ring {
+      border: 2.5px dashed #444444;
+      background: #090909;
+      color: #888888;
+    }
+    .avatar-add-btn:hover .avatar-circle-ring {
+      border-color: #ff0033;
+      color: #ffffff;
+      background: #1c0508;
+      box-shadow: 0 0 28px rgba(255, 0, 51, 0.55);
+      border-style: solid;
+      transform: scale(1.08);
+    }
+    .avatar-add-btn .avatar-node-title {
+      color: #aaaaaa;
+      font-weight: 700;
+    }
+    .avatar-add-btn:hover .avatar-node-title {
+      color: #ffffff;
+    }
+
+    /* Separate Page / Sub-View Navigation Bar */
+    .back-nav-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+      padding: 14px 22px;
+      background: #0d0d0d;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .btn-back-hub {
+      position: relative;
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      padding: 11px 22px;
+      border-radius: 9999px;
+      cursor: pointer;
+      user-select: none;
+      text-decoration: none;
+      color: #ffffff !important;
+      background: linear-gradient(180deg, rgba(42, 46, 56, 0.9) 0%, rgba(22, 25, 32, 0.95) 55%, rgba(12, 14, 18, 0.98) 100%);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-top: 1.8px solid rgba(255, 255, 255, 0.65);
+      border-bottom: 1.8px solid rgba(0, 0, 0, 0.85);
+      box-shadow: 
+        0 10px 24px -4px rgba(0, 0, 0, 0.85),
+        inset 0 1.8px 1.5px rgba(255, 255, 255, 0.5),
+        inset 0 -2.5px 3.5px rgba(0, 0, 0, 0.75),
+        inset 2px 0 3px rgba(255, 255, 255, 0.18),
+        inset -2px 0 3px rgba(255, 255, 255, 0.18);
+      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-back-hub::after {
+      content: '';
+      position: absolute;
+      top: 1.5px; left: 8px; right: 8px; height: 44%;
+      border-radius: 9999px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.02) 100%);
+      pointer-events: none;
+    }
+    .btn-back-hub::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -130%; width: 80%; height: 200%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transform: skewX(-24deg);
+      pointer-events: none;
+      transition: left 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 2;
+    }
+    .btn-back-hub:hover {
+      transform: translateY(-2px) scale(1.02);
+      background: linear-gradient(180deg, rgba(55, 60, 72, 0.95) 0%, rgba(30, 34, 44, 0.98) 100%);
+      border-top-color: rgba(255, 255, 255, 0.95);
+      box-shadow: 
+        0 16px 36px -4px rgba(0, 0, 0, 0.95),
+        0 0 16px rgba(255, 255, 255, 0.25),
+        inset 0 2px 2px rgba(255, 255, 255, 0.8);
+    }
+    .btn-back-hub:hover::before { left: 150%; }
+    .btn-back-hub:active {
+      transform: translateY(1.5px) scale(0.975);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.7);
+    }
+    .channel-breadcrumb {
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .channel-breadcrumb strong {
+      color: #ffffff;
+    }
+    .hub-guidance-card {
+      background: linear-gradient(180deg, #0e0e0e 0%, #060606 100%);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius-md);
+      padding: 24px 28px;
+      margin-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 8px 24px rgba(0,0,0,0.7);
+    }
+    .hub-guidance-text {
+      font-size: 13px;
+      color: #cccccc;
+      line-height: 1.6;
+    }
+    .hub-channels-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 18px;
+      margin-top: 22px;
+    }
+    .hub-channel-card-item {
+      background: #0d0d0d;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.6);
+    }
+    .hub-channel-card-item:hover {
+      border-color: #ff0033;
+      background: #14070a;
+      box-shadow: 0 6px 24px rgba(255, 0, 51, 0.28);
+      transform: translateY(-2px);
+    }
+    .hub-card-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 1.5px solid #333333;
+      background: #161616;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .hub-card-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .hub-card-avatar span {
+      font-size: 22px;
+      font-weight: 800;
+      color: #ff334b;
+    }
+    .hub-btn-manage {
+      background: #1c1c1c;
+      border: 1px solid #383838;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+    }
+    .hub-channel-card-item:hover .hub-btn-manage {
+      background: #ff0033;
+      border-color: #ff0033;
+      color: #ffffff;
+      box-shadow: 0 0 14px rgba(255, 0, 51, 0.55);
+    }
+
+    /* ================= ACTIVE CHANNEL DETAIL DASHBOARD ================= */
+    .active-channel-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 16px 40px rgba(0,0,0,0.9);
+      animation: fadeIn 0.25s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .channel-profile-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .profile-info-left {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .profile-large-avatar {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid #333333;
+      background: #141414;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.8);
+    }
+    .profile-large-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .profile-large-avatar span { font-size: 28px; font-weight: 900; color: #ff334b; }
+    .profile-title { font-size: 22px; font-weight: 800; color: #ffffff; letter-spacing: -0.01em; }
+    .channel-handle-pill {
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      background: #151515;
+      color: #aaaaaa;
+      border: 1px solid #252525;
+    }
+    .status-badge {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+    }
+    .badge-active {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #34d399;
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.2);
+    }
+    .badge-paused {
+      background: #181818;
+      border: 1px solid #333333;
+      color: #888888;
+    }
+
+    /* Switch toggle */
+    .switch-container {
+      position: relative;
+      display: inline-block;
+      width: 48px;
+      height: 26px;
+    }
+    .switch-container input { opacity: 0; width: 0; height: 0; }
+    .switch-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #242424;
+      border: 1px solid #383838;
+      transition: .25s ease;
+      border-radius: 34px;
+    }
+    .switch-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .25s ease;
+      border-radius: 50%;
+    }
+    input:checked + .switch-slider {
+      background-color: #10b981;
+      border-color: #059669;
+      box-shadow: 0 0 14px rgba(16, 185, 129, 0.4);
+    }
+    input:checked + .switch-slider:before {
+      transform: translateX(22px);
+    }
+
+    /* 4 KPI Metrics Row */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin: 24px 0;
+    }
+    @media (max-width: 900px) {
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+    }
+    .kpi-box {
+      background: var(--card-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+    .kpi-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 6px; }
+    .kpi-number { font-size: 24px; font-weight: 800; color: #ffffff; font-family: 'JetBrains Mono', monospace; }
+    .kpi-sub { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+    /* Configuration 2x2 Grid */
+    .config-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-top: 10px;
+    }
+    @media (max-width: 960px) {
+      .config-grid { grid-template-columns: 1fr; }
+    }
+    .config-card {
+      background: var(--card-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 22px;
+    }
+    .config-card-head {
+      font-size: 13px;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .select-field {
+      width: 100%;
+      background: #080808;
+      border: 1px solid var(--border-light);
+      color: #ffffff;
+      font-size: 13px;
+      font-family: inherit;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+    .select-field:focus { border-color: #ffffff; }
+    .select-field optgroup { background: #141414; color: #888888; font-weight: 700; }
+    .select-field option { background: #0c0c0c; color: #ffffff; }
+    .field-hint { font-size: 11px; color: var(--text-dim); margin-top: 6px; line-height: 1.4; }
+    .field-label { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; display: block; }
+
+    /* Duration Pills */
+    .duration-pills-row { display: flex; flex-wrap: wrap; gap: 6px; }
+    /* Duration Pills (Liquid Crystal Beads) */
+    .duration-pills-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pill-btn {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 60%, rgba(255, 255, 255, 0.06) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-top: 1.2px solid rgba(255, 255, 255, 0.55);
+      border-bottom: 1.2px solid rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: #aaaaaa;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 7px 16px;
+      border-radius: 9999px;
+      cursor: pointer;
+      box-shadow: 
+        0 4px 14px rgba(0, 0, 0, 0.5),
+        inset 0 1.2px 1px rgba(255, 255, 255, 0.4),
+        inset 0 -1.5px 2px rgba(0, 0, 0, 0.4);
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .pill-btn:hover {
+      color: #ffffff;
+      transform: translateY(-1.5px) scale(1.04);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0.08) 60%, rgba(255, 255, 255, 0.14) 100%);
+      border-top-color: rgba(255, 255, 255, 0.9);
+      box-shadow: 
+        0 8px 20px rgba(0, 0, 0, 0.65),
+        0 0 12px rgba(255, 255, 255, 0.25),
+        inset 0 1.5px 1.5px rgba(255, 255, 255, 0.8),
+        inset 0 -2px 3px rgba(0, 0, 0, 0.5);
+    }
+    .pill-btn.active {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(235, 240, 248, 0.9) 100%);
+      color: #0b0f19 !important;
+      font-weight: 800;
+      border-color: rgba(255, 255, 255, 0.9);
+      border-top: 1.5px solid #ffffff;
+      border-bottom: 1.5px solid rgba(180, 195, 215, 0.8);
+      box-shadow: 
+        0 6px 18px rgba(0, 0, 0, 0.6),
+        0 0 16px rgba(255, 255, 255, 0.45),
+        inset 0 1.5px 1.2px #ffffff,
+        inset 0 -2px 3px rgba(140, 160, 185, 0.5);
+    }
+    .mini-input {
+      width: 76px;
+      background: #080808;
+      border: 1px solid var(--border-light);
+      color: #ffffff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      text-align: center;
+      outline: none;
+    }
+    .input-time {
+      width: 100%;
+      background: #080808;
+      border: 1px solid var(--border-light);
+      color: #ffffff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      outline: none;
+    }
+    .radio-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #0a0a0a;
+      border: 1px solid #222222;
+      padding: 7px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 600;
+      color: #cccccc;
+      cursor: pointer;
+    }
+    .radio-pill input { accent-color: #ffffff; cursor: pointer; }
+    .weekdays-row { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+    .day-btn {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 60%, rgba(255, 255, 255, 0.06) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-top: 1.2px solid rgba(255, 255, 255, 0.55);
+      border-bottom: 1.2px solid rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(12px);
+      color: #888888;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 7px 12px;
+      border-radius: 9999px;
+      cursor: pointer;
+      font-family: 'JetBrains Mono', monospace;
+      box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.5),
+        inset 0 1.2px 1px rgba(255, 255, 255, 0.4),
+        inset 0 -1.5px 2px rgba(0, 0, 0, 0.4);
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .day-btn:hover {
+      color: #ffffff;
+      transform: translateY(-1.5px) scale(1.05);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0.08) 60%, rgba(255, 255, 255, 0.14) 100%);
+      border-top-color: rgba(255, 255, 255, 0.9);
+      box-shadow: 
+        0 8px 20px rgba(0, 0, 0, 0.65),
+        inset 0 1.5px 1.5px rgba(255, 255, 255, 0.8);
+    }
+    .day-btn.active {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(235, 240, 248, 0.9) 100%);
+      color: #0b0f19 !important;
+      font-weight: 800;
+      border-color: rgba(255, 255, 255, 0.9);
+      border-top: 1.5px solid #ffffff;
+      border-bottom: 1.5px solid rgba(180, 195, 215, 0.8);
+      box-shadow: 
+        0 6px 18px rgba(0, 0, 0, 0.6),
+        0 0 14px rgba(255, 255, 255, 0.4),
+        inset 0 1.5px 1.2px #ffffff,
+        inset 0 -2px 3px rgba(140, 160, 185, 0.5);
+    }
+
+    /* Footer Action Bar */
+    .detail-footer-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .btn-save-channel {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.97) 0%, rgba(240, 243, 250, 0.9) 55%, rgba(220, 228, 240, 0.85) 100%);
+      color: #0b0f19 !important;
+      font-weight: 800;
+      font-size: 13px;
+      padding: 12px 26px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-top: 1.8px solid #ffffff;
+      border-bottom: 1.8px solid rgba(175, 190, 215, 0.85);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 
+        0 12px 28px -4px rgba(0, 0, 0, 0.7),
+        0 3px 10px rgba(255, 255, 255, 0.2),
+        inset 0 2px 2px rgba(255, 255, 255, 1),
+        inset 0 -3px 4px rgba(135, 155, 185, 0.5),
+        inset 2.5px 0 3px rgba(255, 255, 255, 0.7),
+        inset -2.5px 0 3px rgba(255, 255, 255, 0.7);
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
+      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-save-channel::after {
+      content: '';
+      position: absolute;
+      top: 1.5px; left: 8px; right: 8px; height: 44%;
+      border-radius: 12px 12px 100px 100px / 12px 12px 16px 16px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.1) 100%);
+      pointer-events: none;
+    }
+    .btn-save-channel::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -130%; width: 80%; height: 200%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent);
+      transform: skewX(-24deg);
+      pointer-events: none;
+      transition: left 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 2;
+    }
+    .btn-save-channel:hover {
+      transform: translateY(-2px) scale(1.02);
+      background: linear-gradient(180deg, #ffffff 0%, rgba(245, 248, 255, 0.96) 55%, rgba(230, 238, 252, 0.92) 100%);
+      border-top-color: #ffffff;
+      box-shadow: 
+        0 18px 38px -4px rgba(0, 0, 0, 0.8),
+        0 0 24px rgba(255, 255, 255, 0.65),
+        inset 0 2px 2px #ffffff;
+    }
+    .btn-save-channel:hover::before { left: 150%; }
+    .btn-save-channel:active {
+      transform: translateY(1.5px) scale(0.975);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+    }
+
+    .btn-remove-ch {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(255, 45, 75, 0.85) 0%, rgba(185, 15, 40, 0.92) 60%, rgba(120, 8, 25, 0.96) 100%);
+      border: 1px solid rgba(255, 120, 140, 0.4);
+      border-top: 1.5px solid rgba(255, 200, 210, 0.9);
+      border-bottom: 1.5px solid rgba(60, 0, 10, 0.9);
+      color: #ffffff !important;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 9px 16px;
+      border-radius: 9999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 
+        0 8px 20px -4px rgba(255, 0, 51, 0.4),
+        inset 0 1.5px 1.2px rgba(255, 255, 255, 0.7),
+        inset 0 -2px 3px rgba(40, 0, 10, 0.8);
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-remove-ch:hover {
+      transform: translateY(-1.5px) scale(1.03);
+      box-shadow: 
+        0 12px 28px -4px rgba(255, 0, 51, 0.6),
+        0 0 16px rgba(255, 51, 85, 0.5),
+        inset 0 2px 2px #ffffff;
+    }
+    .btn-remove-ch:active {
+      transform: translateY(1px) scale(0.98);
+    }
+
+    .btn-secondary-sm {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(35, 38, 45, 0.85) 0%, rgba(18, 20, 25, 0.92) 60%, rgba(10, 12, 16, 0.96) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-top: 1.5px solid rgba(255, 255, 255, 0.6);
+      border-bottom: 1.5px solid rgba(0, 0, 0, 0.8);
+      color: #ffffff !important;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 9px 16px;
+      border-radius: 9999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 
+        0 8px 20px -4px rgba(0, 0, 0, 0.75),
+        inset 0 1.5px 1.2px rgba(255, 255, 255, 0.45);
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-secondary-sm:hover {
+      transform: translateY(-1.5px) scale(1.03);
+      border-top-color: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.85), inset 0 2px 2px rgba(255, 255, 255, 0.7);
+    }
+
+    .btn-visit-channel {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(35, 38, 45, 0.85) 0%, rgba(18, 20, 25, 0.92) 60%, rgba(10, 12, 16, 0.96) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-top: 1.5px solid rgba(255, 255, 255, 0.6);
+      border-bottom: 1.5px solid rgba(0, 0, 0, 0.8);
+      color: #ffffff !important;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 9px 16px;
+      border-radius: 9999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      box-shadow: 
+        0 8px 20px -4px rgba(0, 0, 0, 0.75),
+        inset 0 1.5px 1.2px rgba(255, 255, 255, 0.45);
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-visit-channel:hover {
+      transform: translateY(-1.5px) scale(1.03);
+      border-top-color: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.85);
+    }
+
+    .btn-test-pipeline {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(255, 35, 65, 0.9) 0%, rgba(195, 10, 35, 0.95) 55%, rgba(135, 5, 22, 0.98) 100%);
+      color: #ffffff !important;
+      font-weight: 800;
+      font-size: 13px;
+      padding: 12px 24px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 120, 140, 0.45);
+      border-top: 1.8px solid rgba(255, 210, 220, 0.95);
+      border-bottom: 1.8px solid rgba(60, 0, 12, 0.9);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 
+        0 12px 28px -4px rgba(255, 0, 51, 0.45),
+        inset 0 2px 2px rgba(255, 255, 255, 0.8),
+        inset 0 -3px 4px rgba(50, 0, 12, 0.8),
+        inset 2px 0 3px rgba(255, 255, 255, 0.3),
+        inset -2px 0 3px rgba(255, 255, 255, 0.3);
+      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-test-pipeline::after {
+      content: '';
+      position: absolute;
+      top: 1.5px; left: 8px; right: 8px; height: 44%;
+      border-radius: 12px 12px 100px 100px / 12px 12px 16px 16px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.02) 100%);
+      pointer-events: none;
+    }
+    .btn-test-pipeline::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -130%; width: 80%; height: 200%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent);
+      transform: skewX(-24deg);
+      pointer-events: none;
+      transition: left 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 2;
+    }
+    .btn-test-pipeline:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 
+        0 18px 38px -4px rgba(255, 0, 51, 0.65),
+        0 0 24px rgba(255, 51, 85, 0.6),
+        inset 0 2px 2px #ffffff;
+    }
+    .btn-test-pipeline:hover::before { left: 150%; }
+    .btn-test-pipeline:active {
+      transform: translateY(1.5px) scale(0.975);
+    }
+    .btn-test-pipeline:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .pipeline-spinner {
+      width: 44px;
+      height: 44px;
+      border: 3.5px solid #222222;
+      border-top-color: #ff0033;
+      border-radius: 50%;
+      margin: 0 auto;
+      animation: pipelineSpin 0.8s linear infinite;
+    }
+    @keyframes pipelineSpin {
+      to { transform: rotate(360deg); }
+    }
+    .pipeline-steps-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: #080808;
+      border: 1px solid #1c1c1c;
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 14px;
+    }
+    .pipeline-step-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 6px;
+      background: #111111;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+    }
+    .pipeline-step-item.active {
+      background: #1a0f12;
+      border-color: rgba(255, 0, 51, 0.4);
+    }
+    .pipeline-step-item.completed {
+      background: #0a1712;
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+    .step-icon { font-size: 16px; flex-shrink: 0; }
+    .step-text { flex: 1; min-width: 0; }
+    .step-label { font-size: 12px; font-weight: 700; color: #ffffff; }
+    .step-sub { font-size: 11px; color: #666666; margin-top: 2px; }
+    .step-badge {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: #1a1a1a;
+      color: #777777;
+    }
+    .pipeline-step-item.active .step-badge {
+      background: rgba(255, 0, 51, 0.25);
+      color: #ff4d6d;
+    }
+    .pipeline-step-item.completed .step-badge {
+      background: rgba(16, 185, 129, 0.25);
+      color: #10b981;
+    }
+
+    /* Empty state */
+    .empty-account-box {
+      background: var(--card-bg);
+      border: 1px dashed #333333;
+      border-radius: var(--radius-lg);
+      padding: 70px 32px;
+      text-align: center;
+    }
+    .empty-icon-circle {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: #111;
+      border: 2px dashed #ff0033;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 18px;
+      color: #ff0033;
+      box-shadow: 0 0 20px rgba(255, 0, 51, 0.2);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-card {
+      background: #0d0d0d;
+      border: 1px solid #282828;
+      border-radius: var(--radius-lg);
+      max-width: 540px;
+      width: 100%;
+      padding: 28px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.1);
+      position: relative;
+    }
+    .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .modal-close-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.03) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-top: 1.2px solid rgba(255, 255, 255, 0.6);
+      color: #aaaaaa;
+      font-size: 16px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.4);
+      transition: all 0.2s ease;
+    }
+    .modal-close-btn:hover {
+      color: #ffffff;
+      transform: scale(1.1);
+      border-top-color: #ffffff;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.7), inset 0 1.5px 1.5px rgba(255,255,255,0.8);
+    }
+    .modal-section { background: #121212; border: 1px solid #222222; border-radius: var(--radius-md); padding: 18px; margin-bottom: 16px; }
+    .input-text {
+      width: 100%;
+      background: #080808;
+      border: 1px solid var(--border-light);
+      color: #ffffff;
+      font-size: 13px;
+      font-family: inherit;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      outline: none;
+      margin-top: 4px;
+      margin-bottom: 12px;
+    }
+    .input-text:focus { border-color: #ffffff; }
+    .btn-primary-yt {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(255, 30, 60, 0.92) 0%, rgba(200, 10, 35, 0.96) 55%, rgba(135, 5, 20, 0.98) 100%);
+      color: #ffffff !important;
+      font-weight: 800;
+      font-size: 13px;
+      padding: 13px 24px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 120, 140, 0.45);
+      border-top: 1.8px solid rgba(255, 210, 220, 0.95);
+      border-bottom: 1.8px solid rgba(60, 0, 12, 0.9);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 
+        0 12px 28px -4px rgba(255, 0, 51, 0.45),
+        inset 0 2px 2px rgba(255, 255, 255, 0.8),
+        inset 0 -3px 4px rgba(50, 0, 12, 0.8),
+        inset 2px 0 3px rgba(255, 255, 255, 0.3),
+        inset -2px 0 3px rgba(255, 255, 255, 0.3);
+      width: 100%;
+      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-primary-yt::after {
+      content: '';
+      position: absolute;
+      top: 1.5px; left: 8px; right: 8px; height: 44%;
+      border-radius: 12px 12px 100px 100px / 12px 12px 16px 16px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.02) 100%);
+      pointer-events: none;
+    }
+    .btn-primary-yt::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -130%; width: 80%; height: 200%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent);
+      transform: skewX(-24deg);
+      pointer-events: none;
+      transition: left 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 2;
+    }
+    .btn-primary-yt:hover {
+      transform: translateY(-2px) scale(1.01);
+      box-shadow: 
+        0 18px 38px -4px rgba(255, 0, 51, 0.65),
+        0 0 24px rgba(255, 51, 85, 0.6),
+        inset 0 2px 2px #ffffff;
+    }
+    .btn-primary-yt:hover::before { left: 150%; }
+    .btn-primary-yt:active {
+      transform: translateY(1.5px) scale(0.98);
+    }
+
+    /* Toast */
+    .toast-box { position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+    .toast {
+      background: #121212;
+      border: 1px solid #2e2e2e;
+      color: #ffffff;
+      padding: 14px 20px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.85);
+      animation: slideIn 0.25s ease-out;
+    }
+    .toast-success { border-color: #10b981; color: #a7f3d0; }
+    .toast-error { border-color: #ef4444; color: #fecaca; }
+    @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    /* Mobile Hamburger Button */
+    .mobile-toggle-btn {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 4.5px;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      cursor: pointer;
+      padding: 0;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+    .mobile-toggle-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+    .mobile-toggle-btn .bar {
+      width: 17px;
+      height: 2px;
+      background-color: #ffffff;
+      border-radius: 2px;
+      transition: all 0.25s ease;
+    }
+    .mobile-toggle-btn.open .bar:nth-child(1) {
+      transform: translateY(6.5px) rotate(45deg);
+    }
+    .mobile-toggle-btn.open .bar:nth-child(2) {
+      opacity: 0;
+    }
+    .mobile-toggle-btn.open .bar:nth-child(3) {
+      transform: translateY(-6.5px) rotate(-45deg);
+    }
+
+    /* Mobile Nav Drawer */
+    .mobile-nav-drawer {
+      position: fixed;
+      top: 57px;
+      left: 0;
+      right: 0;
+      background: rgba(8, 9, 12, 0.98);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+      padding: 14px 16px 20px;
+      z-index: 999;
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.9);
+      animation: slideDownNav 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .mobile-nav-drawer.open {
+      display: flex;
+    }
+    @keyframes slideDownNav {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .mobile-nav-item {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #bbbbbb;
+      padding: 10px 14px;
+      border-radius: 10px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      text-decoration: none;
+    }
+    .mobile-nav-item:hover,
+    .mobile-nav-item.active {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 10px 14px !important;
+        gap: 8px !important;
+      }
+      .brand-wrap {
+        gap: 8px !important;
+      }
+      .brand-logo {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 13px !important;
+      }
+      .brand-name {
+        font-size: 12px !important;
+      }
+      .brand-badge {
+        display: none !important;
+      }
+      .nav-menu {
+        display: none !important;
+      }
+      .mobile-toggle-btn {
+        display: flex !important;
+      }
+      .nav-status-text {
+        display: none !important;
+      }
+      #nav-auth-container {
+        gap: 8px !important;
+      }
+      .page-container {
+        padding: 18px 14px 60px !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .brand-title-wrap {
+        max-width: 110px;
+      }
+      .brand-name {
+        font-size: 11px !important;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Sticky Navbar (Locked on all pages) -->
+  <header class="navbar">
+    <div class="brand-wrap">
+      <a href="/" style="display:flex;align-items:center;gap:12px;text-decoration:none;">
+        <div class="brand-logo">Y</div>
+        <div class="brand-title-wrap">
+          <span class="brand-name">YT-1M STUDIO</span>
+          <span class="brand-badge">PRO v2.0</span>
+        </div>
+      </a>
+    </div>
+    <nav class="nav-menu">
+      <a href="/" class="nav-item">Home</a>
+      <a href="/#features" class="nav-item">Features</a>
+      <a href="/#workflow" class="nav-item">How it Works</a>
+      <a href="/dashboard" class="nav-item">Dashboard</a>
+      <a href="/dashboard#testing" class="nav-item">Testing Lab</a>
+      <a href="/account" class="nav-item active">Account</a>
+      <a href="/statement" class="nav-item">Statement</a>
+      <a href="/privacy" class="nav-item">Privacy Policy</a>
+      <a href="/terms" class="nav-item">Terms of Service</a>
+    </nav>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div id="nav-auth-container" style="display:flex;align-items:center;gap:12px;">
+        <div style="font-size:12px;color:#10b981;font-weight:700;display:flex;align-items:center;gap:6px;" id="statusIndicator" title="Automation Engine Online">
+          <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#10b981;box-shadow:0 0 8px rgba(16,185,129,0.8);flex-shrink:0;"></span>
+          <span class="nav-status-text">Engine Online</span>
+        </div>
+        <div id="nav-user-chip" style="display:none;align-items:center;gap:10px;padding:4px 12px 4px 6px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:9999px;backdrop-filter:blur(12px);">
+          <img id="nav-user-avatar" src="" alt="avatar" style="width:26px;height:26px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.8);object-fit:cover;display:none;" />
+          <div id="nav-user-fallback" style="width:26px;height:26px;border-radius:50%;background:#222;border:1.5px solid rgba(255,255,255,0.8);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;">U</div>
+          <span id="nav-user-email" style="font-size:12px;font-weight:700;color:#ffffff;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+          <a href="/api/auth/logout" class="btn-secondary" style="padding:4px 10px;font-size:11px;border-radius:9999px;">Sign Out</a>
+        </div>
+      </div>
+
+      <!-- Mobile Hamburger Button -->
+      <button id="mobile-toggle-btn" class="mobile-toggle-btn" onclick="toggleMobileNav()" aria-label="Toggle Navigation">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Menu -->
+  <div id="mobile-nav-drawer" class="mobile-nav-drawer">
+    <a href="/" class="mobile-nav-item">Home</a>
+    <a href="/#features" class="mobile-nav-item">Features</a>
+    <a href="/#workflow" class="mobile-nav-item">How it Works</a>
+    <a href="/dashboard" class="mobile-nav-item">Dashboard</a>
+    <a href="/dashboard#testing" class="mobile-nav-item">Testing Lab</a>
+    <a href="/account" class="mobile-nav-item active">Account</a>
+    <a href="/statement" class="mobile-nav-item">Statement</a>
+    <a href="/privacy" class="mobile-nav-item">Privacy Policy</a>
+    <a href="/terms" class="mobile-nav-item">Terms of Service</a>
+  </div>
+
+  <div class="page-container">
+    <div class="page-header-row">
+      <h1 class="page-header-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        <span>YouTube Multi-Channel Hub</span>
+      </h1>
+    </div>
+
+        <!-- VIEW A: MAIN CHANNELS HUB (Stories/Circles Showcase) -->
+        <div id="channelsHubMainView">
+          <div class="avatar-bar-card">
+            <div class="avatar-bar-header">
+              <span class="avatar-bar-title">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <span>CONNECTED YOUTUBE CHANNELS</span>
+              </span>
+              <span id="channelCountBadge" style="font-size:12px;color:var(--text-muted);font-family:'JetBrains Mono',monospace;">0 Channels</span>
+            </div>
+
+            <!-- Avatar Track: Circular Avatars + Big (+) icon -->
+            <div class="avatar-track" id="avatarTrack">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+          <!-- Hub Guidance / Channels Overview Area -->
+          <div id="hubContentArea">
+            <!-- Rendered dynamically by JS -->
+          </div>
+        </div>
+
+        <!-- VIEW B: SEPARATE DEDICATED CHANNEL SETTINGS PAGE (Hidden by default, opens on channel click!) -->
+        <div id="channelDedicatedSettingsPage" style="display: none;">
+          <!-- Top Back Navigation Bar -->
+          <div class="back-nav-bar">
+            <button class="btn-back-hub" onclick="closeChannelSettings()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+              <span>← Back to Channels (वापस चैनलों की लिस्ट पर जाएं)</span>
+            </button>
+            <div class="channel-breadcrumb">
+              <span>YouTube Channels Hub</span>
+              <span>/</span>
+              <strong id="breadcrumbChannelName">Channel Settings</strong>
+            </div>
+          </div>
+
+          <!-- Active Channel Detail Card -->
+          <div id="activeChannelDetailPanel">
+            <!-- Populated by JS -->
+          </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-brand">
+      <div class="brand-logo" style="width: 24px; height: 24px; font-size: 12px;">Y</div>
+      <div style="font-weight: 800; font-size: 12px; color: #ffffff;">YT-1M STUDIO</div>
+      <span class="brand-badge" style="font-size: 8px;">PRO v2.0</span>
+    </div>
+    <div class="footer-links">
+      <a href="/" class="footer-link">Home</a>
+      <a href="/dashboard" class="footer-link">Dashboard</a>
+      <a href="/account" class="footer-link">Account</a>
+      <a href="/statement" class="footer-link">Statement</a>
+      <a href="/privacy" class="footer-link">Privacy Policy</a>
+      <a href="/terms" class="footer-link">Terms of Service</a>
+    </div>
+    <div>&copy; 2026 YT-1M Automation Studio. All rights reserved.</div>
+  </footer>
+
+  <!-- Add Channel Modal -->
+  <div class="modal-overlay" id="addChannelModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h2 style="font-size:18px;font-weight:800;color:#ffffff;">Add YouTube Channel</h2>
+        <button class="modal-close-btn" onclick="closeAddChannelModal()">✕</button>
+      </div>
+
+      <!-- Option 1: Google OAuth (Brand Account) -->
+      <div class="modal-section">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span style="font-size:14px;font-weight:700;color:#ffffff;">Option 1: Connect via Google OAuth 2.0</span>
+          <span style="font-size:10px;font-weight:800;background:#10b981;color:#000;padding:2px 6px;border-radius:4px;">OFFICIAL</span>
+        </div>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px;line-height:1.5;">
+          Connect your Gmail and select any Brand Account or channel. Real profile photo, subscriber count, and upload tokens will be loaded automatically.
+        </p>
+        <button class="btn-primary-yt" onclick="connectYouTubeOAuth()">
+          <span>🔗 Connect YouTube Brand Channel</span>
+        </button>
+      </div>
+
+      <!-- Option 2: Custom Profile -->
+      <div class="modal-section">
+        <div style="font-size:14px;font-weight:700;color:#ffffff;margin-bottom:8px;">Option 2: Register Brand Channel Slot</div>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">
+          Create a channel circle slot with dedicated automation rules.
+        </p>
+        <label class="field-label">Channel Name</label>
+        <input type="text" id="modalChanTitle" class="input-text" placeholder="e.g. Sleep Soundly Rain Hub" />
+
+        <label class="field-label">Channel Handle / URL</label>
+        <input type="text" id="modalChanHandle" class="input-text" placeholder="e.g. @SleepSoundlyRain" />
+
+        <label class="field-label">Dedicated Series / Theme</label>
+        <select id="modalChanTheme" class="select-field" style="margin-bottom:14px;">
+          <option value="all_weekly">🌟 Dynamic Weekly Schedule (Mon-Sun Auto-Cycle)</option>
+          <option value="01_monday_evening_rain">🌧️ Midnight Cabin Heavy Rain</option>
+          <option value="02_tuesday_evening_rain">🌧️ Rainy Window Night</option>
+          <option value="04_thursday_evening_rain">🌧️ Heavy Rain on Tin Roof</option>
+          <option value="01_monday_morning_ocean">🌊 Calm Sunrise Ocean Waves</option>
+          <option value="02_tuesday_morning_ocean">🌊 Tropical Beach Morning Waves</option>
+        </select>
+
+        <button class="btn-save-channel" style="width:100%;justify-content:center;" onclick="submitManualChannel()">
+          <span>✓ Add Channel Slot</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Test Pipeline Modal & Live Progress Tracker -->
+  <div class="modal-overlay" id="testPipelineModal" style="display: none;">
+    <div class="modal-card" style="max-width: 580px;">
+      <div class="modal-head">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 20px;">🚀</span>
+          <h2 style="font-size: 18px; font-weight: 800; color: #ffffff;" id="modalTestChanTitle">Test Full Video Pipeline</h2>
+        </div>
+        <button class="modal-close-btn" onclick="closeTestPipelineModal()">✕</button>
+      </div>
+
+      <!-- Pre-launch Configuration view -->
+      <div id="testPipelinePreLaunch">
+        <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 18px;">
+          This test runs the <strong>complete real pipeline</strong> for this channel:
+          procedural audio synthesis &rarr; cinematic nature video &rarr; audio sync &rarr;
+          YouTube upload &rarr; Gmail confirmation alert &rarr; auto disk cleanup!
+        </p>
+
+        <div class="modal-section" style="margin-bottom: 20px;">
+          <div style="font-size: 12px; font-weight: 700; color: #888888; text-transform: uppercase; margin-bottom: 12px;">Select Test Duration</div>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <label class="radio-pill" style="display: flex; justify-content: space-between; padding: 14px 16px; background: rgba(16, 185, 129, 0.08); border: 1.5px solid #10b981; border-radius: 10px; cursor: pointer;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <input type="radio" name="testDurOption" value="fullChannel" checked />
+                <div>
+                  <strong style="color: #ffffff; font-size: 14px;">🎬 Configured Duration (<span id="testDurLabel">1 Hr</span>)</strong>
+                  <div style="font-size: 11px; color: #10b981; margin-top: 2px;">✓ Selected in Channel Settings. Produces full real 1080p broadcast video!</div>
+                </div>
+              </div>
+              <span style="font-size: 11px; background: #064e3b; color: #34d399; padding: 3px 10px; border-radius: 6px; font-weight: 800; align-self: center;">SELECTED</span>
+            </label>
+
+            <label class="radio-pill" style="display: flex; justify-content: space-between; padding: 12px 16px; background: #161616; border: 1px solid #262626; border-radius: 10px; cursor: pointer;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <input type="radio" name="testDurOption" value="quick30" />
+                <div>
+                  <strong style="color: #ffffff; font-size: 13px;">⚡ Fast 30-Second Test Clip</strong>
+                  <div style="font-size: 11px; color: #888888; margin-top: 2px;">Only for testing YouTube connectivity in 10 seconds.</div>
+                </div>
+              </div>
+              <span style="font-size: 11px; background: #1f2937; color: #9ca3af; padding: 3px 8px; border-radius: 4px; font-weight: 700; align-self: center;">FAST</span>
+            </label>
+          </div>
+        </div>
+
+        <div style="background: #111111; border: 1px solid #222222; border-radius: 8px; padding: 14px; margin-bottom: 22px; font-size: 12px; color: #aaaaaa; line-height: 1.6;">
+          <div>📧 <strong>Gmail Notification:</strong> <code style="color: #60a5fa;">9329238475x@gmail.com</code> will receive direct YouTube video link.</div>
+          <div style="margin-top: 6px;">🧹 <strong>Auto Disk Purge:</strong> All temporary clips and final MP4 files will be auto-deleted immediately upon upload.</div>
+        </div>
+
+        <button class="btn-test-pipeline" style="width: 100%; justify-content: center; padding: 14px 20px; font-size: 14px;" onclick="executeTestPipeline()">
+          <span id="btnRunTestLabel">🚀 Run Pipeline & Upload to YouTube</span>
+        </button>
+      </div>
+
+      <!-- Running / Progress view -->
+      <div id="testPipelineRunning" style="display: none;">
+        <div style="text-align: center; padding: 16px 10px 10px;">
+          <div class="pipeline-spinner" id="pipelineSpinner"></div>
+          <h3 style="font-size: 16px; font-weight: 800; color: #ffffff; margin: 14px 0 6px;" id="pipelineStepTitle">Starting Pipeline...</h3>
+          <p style="font-size: 13px; color: var(--text-muted);" id="pipelineStepMsg">Initializing audio and video render engines...</p>
+        </div>
+
+        <!-- Real-Time Visual Progress Bar -->
+        <div style="margin: 10px 0 20px; background: #121212; padding: 14px 16px; border-radius: 10px; border: 1px solid #242424;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 12px; font-weight: 700; color: #d1d5db; display: flex; align-items: center; gap: 8px;">
+              <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10b981; box-shadow:0 0 8px #10b981;"></span>
+              <span id="pipelineLiveStage">Initializing Pipeline...</span>
+            </span>
+            <span id="pipelineBarPercentText" style="font-size: 16px; font-weight: 900; color: #10b981; font-family: monospace;">0%</span>
+          </div>
+          <div style="width: 100%; height: 10px; background: #1c1c1c; border-radius: 999px; overflow: hidden; border: 1px solid #2e2e2e;">
+            <div id="pipelineProgressBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #10b981 0%, #06b6d4 50%, #6366f1 100%); border-radius: 999px; transition: width 0.35s ease; box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-top: 6px; font-size: 10px; color: #666666;">
+            <span>Audio & Video</span>
+            <span>Loop Render</span>
+            <span>YouTube Upload</span>
+            <span>Gmail Alert</span>
+          </div>
+        </div>
+
+        <!-- Steps Tracker -->
+        <div class="pipeline-steps-list">
+          <div class="pipeline-step-item" id="stepItemAudio">
+            <span class="step-icon">🎵</span>
+            <div class="step-text">
+              <div class="step-label">1. Synthesize Procedural Audio</div>
+              <div class="step-sub" id="stepSubAudio">Waiting...</div>
+            </div>
+            <span class="step-badge" id="stepBadgeAudio">Queued</span>
+          </div>
+          <div class="pipeline-step-item" id="stepItemVideo">
+            <span class="step-icon">🎬</span>
+            <div class="step-text">
+              <div class="step-label">2. Generate 1080p Real Video Clip</div>
+              <div class="step-sub" id="stepSubVideo">Waiting...</div>
+            </div>
+            <span class="step-badge" id="stepBadgeVideo">Queued</span>
+          </div>
+          <div class="pipeline-step-item" id="stepItemRender">
+            <span class="step-icon">🎞️</span>
+            <div class="step-text">
+              <div class="step-label">3. Looped Video & Audio Sync</div>
+              <div class="step-sub" id="stepSubRender">Waiting...</div>
+            </div>
+            <span class="step-badge" id="stepBadgeRender">Queued</span>
+          </div>
+          <div class="pipeline-step-item" id="stepItemUpload">
+            <span class="step-icon">📤</span>
+            <div class="step-text">
+              <div class="step-label">4. Upload to YouTube Channel</div>
+              <div class="step-sub" id="stepSubUpload">Waiting...</div>
+            </div>
+            <span class="step-badge" id="stepBadgeUpload">Queued</span>
+          </div>
+          <div class="pipeline-step-item" id="stepItemEmail">
+            <span class="step-icon">📧</span>
+            <div class="step-text">
+              <div class="step-label">5. Send Gmail Confirmation</div>
+              <div class="step-sub" id="stepSubEmail">Waiting...</div>
+            </div>
+            <span class="step-badge" id="stepBadgeEmail">Queued</span>
+          </div>
+          <div class="pipeline-step-item" id="stepItemCleanup">
+            <span class="step-icon">🧹</span>
+            <div class="step-text">
+              <div class="step-label">6. Auto-Purge Local Video & Temp Files</div>
+              <div class="step-sub" id="stepSubCleanup">Waiting...</div>
+            </div>
+            <span class="step-badge" id="stepBadgeCleanup">Queued</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Finished / Success View -->
+      <div id="testPipelineFinished" style="display: none; padding: 10px 0;">
+        <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 20px;">
+          <span style="font-size: 38px;">🎉</span>
+          <h3 style="font-size: 18px; font-weight: 800; color: #10b981; margin: 10px 0 6px;">Pipeline Test Successful!</h3>
+          <p style="font-size: 13px; color: #a7f3d0;" id="successVideoTitle">Video published to YouTube successfully.</p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+          <a href="#" id="successWatchBtn" target="_blank" class="btn-test-pipeline" style="text-decoration: none; justify-content: center; font-size: 14px;">
+            <span>▶ Watch Video on YouTube</span>
+          </a>
+          <a href="#" id="successVisitChanBtn" target="_blank" class="btn-visit-channel" style="justify-content: center; font-size: 13px; padding: 11px;">
+            <span>🔗 Visit Channel on YouTube</span>
+          </a>
+        </div>
+
+        <div style="background: #111111; border: 1px solid #222222; border-radius: 8px; padding: 14px; font-size: 12px; color: #888888; line-height: 1.6;">
+          <div>✉️ <strong>Email Delivered:</strong> Confirmation email with video link was sent to <code id="pipelineSummaryRecipient" style="color: #60a5fa;">your Gmail</code>.</div>
+          <div style="margin-top: 6px;">🧹 <strong>Storage Purged:</strong> All temporary rendering files and MP4 videos were permanently deleted from disk.</div>
+        </div>
+
+        <button class="btn-secondary-sm" style="width: 100%; margin-top: 18px; padding: 11px; justify-content: center;" onclick="closeTestPipelineModal()">
+          Done & Close
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="toast-box" id="toastBox"></div>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    let channelsList = [];
+    let activeChannelId = null;
+
+    function showToast(msg, type = 'info') {
+      const box = $('toastBox');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type === 'success' ? 'toast-success' : type === 'error' ? 'toast-error' : ''}`;
+      toast.innerHTML = `<span>${type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ'}</span><span>${msg}</span>`;
+      box.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    async function loadChannels() {
+      try {
+        const res = await fetch('/api/channels');
+        const data = await res.json();
+        channelsList = data.channels || [];
+        
+        renderAvatarTrack();
+        renderHubOverview();
+
+        // If currently viewing a channel settings page, re-render its details
+        const dedicatedPage = $('channelDedicatedSettingsPage');
+        if (dedicatedPage && dedicatedPage.style.display !== 'none' && activeChannelId) {
+          renderActiveChannelDetail();
+        }
+      } catch (err) {
+        console.error('Failed to load channels:', err);
+        showToast('Error loading channels from backend', 'error');
+      }
+    }
+
+    function renderAvatarTrack() {
+      const track = $('avatarTrack');
+      const countBadge = $('channelCountBadge');
+      countBadge.textContent = `${channelsList.length} Connected`;
+
+      let html = '';
+
+      // 1. Render all connected channel profile circles
+      channelsList.forEach(ch => {
+        const isActive = (ch.id === activeChannelId);
+        const auto = ch.automation || {};
+        const isEnabled = auto.enabled !== false;
+
+        html += `
+          <div class="channel-avatar-node ${isActive ? 'active' : ''}" onclick="openChannelSettings('${ch.id}')" title="Click to open automation settings for ${ch.title}">
+            <div class="avatar-circle-ring">
+              ${ch.thumbnail ? `
+                <img src="${ch.thumbnail}" alt="${ch.title}" class="avatar-circle-img" />
+              ` : `
+                <span class="avatar-circle-fallback">${(ch.title || 'C').charAt(0).toUpperCase()}</span>
+              `}
+              ${isEnabled ? `<span class="avatar-status-dot" title="Auto-Pilot Active"></span>` : ''}
+            </div>
+            <span class="avatar-node-title">${ch.title}</span>
+          </div>
+        `;
+      });
+
+      // 2. Big (+) Add Channel button positioned right next to channels
+      html += `
+        <div class="channel-avatar-node avatar-add-btn" onclick="openAddChannelModal()" title="Add / Connect New YouTube Channel">
+          <div class="avatar-circle-ring">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </div>
+          <span class="avatar-node-title">+ Add Channel</span>
+        </div>
+      `;
+
+      track.innerHTML = html;
+    }
+
+    function renderHubOverview() {
+      const area = $('hubContentArea');
+      if (!area) return;
+
+      if (!channelsList || channelsList.length === 0) {
+        area.innerHTML = `
+          <div class="empty-account-box" style="margin-top:10px;">
+            <div class="empty-icon-circle" onclick="openAddChannelModal()" style="cursor:pointer;" title="Click to Connect Channel">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </div>
+            <h2 style="font-size:20px;font-weight:800;color:#ffffff;margin-bottom:8px;">No Channels Connected Yet</h2>
+            <p style="font-size:14px;color:var(--text-muted);max-width:540px;margin:0 auto 24px;line-height:1.6;">
+              Click the <strong>(+) icon</strong> above to link your YouTube Brand channels. Each connected channel will have its own circle, and clicking it will open its dedicated automation settings!
+            </p>
+            <button class="btn-primary-yt" style="width:auto;padding:12px 28px;margin:0 auto;" onclick="connectYouTubeOAuth()">
+              <span>+ Connect Your First YouTube Channel</span>
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      // Channels exist: Keep main view ultra clean! No extra guidance or cards.
+      area.innerHTML = '';
+    }
+
+    function openChannelSettings(chanId) {
+      activeChannelId = chanId;
+      const ch = channelsList.find(c => c.id === chanId);
+      if (!ch) return;
+
+      const breadcrumbName = $('breadcrumbChannelName');
+      if (breadcrumbName) breadcrumbName.textContent = ch.title;
+
+      renderActiveChannelDetail();
+
+      // Hide Hub, Show Dedicated Channel Settings Page
+      $('channelsHubMainView').style.display = 'none';
+      $('channelDedicatedSettingsPage').style.display = 'block';
+
+      // Update avatar track active ring
+      renderAvatarTrack();
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function closeChannelSettings() {
+      // Hide Dedicated Channel Settings Page, Show Hub
+      $('channelDedicatedSettingsPage').style.display = 'none';
+      $('channelsHubMainView').style.display = 'block';
+
+      renderAvatarTrack();
+      renderHubOverview();
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function selectChannel(chanId) {
+      openChannelSettings(chanId);
+    }
+
+    function renderActiveChannelDetail() {
+      const panel = $('activeChannelDetailPanel');
+      if (!channelsList || channelsList.length === 0) {
+        panel.innerHTML = `
+          <div class="empty-account-box">
+            <div class="empty-icon-circle" onclick="openAddChannelModal()" style="cursor:pointer;" title="Click to Connect Channel">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </div>
+            <h2 style="font-size:20px;font-weight:800;color:#ffffff;margin-bottom:8px;">No Channels Connected Yet</h2>
+            <p style="font-size:14px;color:var(--text-muted);max-width:540px;margin:0 auto 24px;line-height:1.6;">
+              Click the <strong>(+) icon</strong> above to link your YouTube Brand channels. You can connect as many channels as you want, and each channel will have its own dedicated circle, live subscribers/video stats, and independent automation schedule!
+            </p>
+            <button class="btn-primary-yt" style="width:auto;padding:12px 28px;margin:0 auto;" onclick="connectYouTubeOAuth()">
+              <span>+ Connect Your First YouTube Channel</span>
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      const ch = channelsList.find(c => c.id === activeChannelId) || channelsList[0];
+      const auto = ch.automation || {};
+      const isEnabled = auto.enabled !== false;
+      const durHours = auto.duration_hours || 2;
+      const durMins = auto.duration_minutes || (durHours * 60);
+      const schedType = auto.schedule_type || 'daily';
+      const days = auto.days || ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+      const uploadTime = auto.upload_time || '18:00';
+      const privacy = auto.privacy || 'private';
+      const themeId = auto.theme_id || '01_monday_evening_rain';
+      const themeMode = auto.theme_mode || 'all_weekly';
+      const toolUploads = ch.tool_uploads_count || 0;
+      const ytChanUrl = ch.custom_url ? (ch.custom_url.startsWith('@') ? `https://www.youtube.com/${ch.custom_url}` : `https://www.youtube.com/@${ch.custom_url}`) : `https://www.youtube.com/channel/${ch.id}`;
+
+      panel.innerHTML = `
+        <div class="active-channel-card" id="activeCard">
+          
+          <!-- Profile Header -->
+          <div class="channel-profile-row">
+            <div class="profile-info-left">
+              <div class="profile-large-avatar">
+                ${ch.thumbnail ? `<img src="${ch.thumbnail}" alt="${ch.title}" />` : `<span>${(ch.title || 'C').charAt(0).toUpperCase()}</span>`}
+              </div>
+              <div>
+                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                  <h2 class="profile-title">${ch.title}</h2>
+                  <span class="channel-handle-pill">${ch.custom_url || '@channel'}</span>
+                  <span class="status-badge ${isEnabled ? 'badge-active' : 'badge-paused'}" id="statusBadge">
+                    ${isEnabled ? '● AUTO-PILOT ON' : '○ PAUSED'}
+                  </span>
+                </div>
+                <div style="font-size:12px;color:var(--text-muted);margin-top:6px;display:flex;gap:10px;flex-wrap:wrap;">
+                  <span>Channel ID: <code>${ch.id}</code></span>
+                  <span>•</span>
+                  <span style="color:#10b981;">Connected via Google OAuth / Profile</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+              <a href="${ytChanUrl}" target="_blank" class="btn-visit-channel" title="Open YouTube Channel in new tab">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+                <span>🔗 Visit Channel</span>
+              </a>
+              <label class="switch-container" title="Enable/Disable Automation for this Channel">
+                <input type="checkbox" id="autoToggle" ${isEnabled ? 'checked' : ''} onchange="toggleActiveAutomation(this.checked)" />
+                <span class="switch-slider"></span>
+              </label>
+              <button class="btn-remove-ch" onclick="deleteActiveChannel()" title="Remove Channel">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                <span>Remove</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 4 KPI Metrics Row -->
+          <div class="kpi-row">
+            <div class="kpi-box">
+              <div class="kpi-title">👥 Subscribers</div>
+              <div class="kpi-number">${ch.subscriber_count || '0'}</div>
+              <div class="kpi-sub">Live YouTube count</div>
+            </div>
+            <div class="kpi-box">
+              <div class="kpi-title">📹 Channel Videos</div>
+              <div class="kpi-number">${ch.video_count || '0'}</div>
+              <div class="kpi-sub">Total on YouTube</div>
+            </div>
+            <div class="kpi-box" style="border-color:rgba(255,0,51,0.25);">
+              <div class="kpi-title" style="color:#ff4d6d;">🤖 Tool Uploads</div>
+              <div class="kpi-number" style="color:#ff334b;">${toolUploads}</div>
+              <div class="kpi-sub">Uploaded via YT-1M Studio</div>
+            </div>
+            <div class="kpi-box">
+              <div class="kpi-title">⏰ Next Upload Time</div>
+              <div class="kpi-number" style="font-size:20px;">${uploadTime} IST</div>
+              <div class="kpi-sub">${schedType === 'daily' ? 'Daily Schedule' : 'Custom Days'}</div>
+            </div>
+          </div>
+
+          <!-- 2x2 Automation Settings Grid -->
+          <div class="config-grid">
+            
+            <!-- 1. Video Theme Selection -->
+            <div class="config-card">
+              <div class="config-card-head">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                <span>1. Video Series / Theme (इस चैनल के लिए वीडियो)</span>
+              </div>
+              <select id="activeThemeSelect" class="select-field">
+                <option value="all_weekly" ${themeMode === 'all_weekly' ? 'selected' : ''}>🌟 Dynamic Weekly Schedule (Mon–Sun Auto-Cycle)</option>
+                <optgroup label="🌧️ Pure Rain Soundscapes (Locked to this theme)">
+                  <option value="01_monday_evening_rain" ${themeId === '01_monday_evening_rain' && themeMode !== 'all_weekly' ? 'selected' : ''}>01. Midnight Cabin Heavy Rain</option>
+                  <option value="02_tuesday_evening_rain" ${themeId === '02_tuesday_evening_rain' ? 'selected' : ''}>02. Rainy Window Night</option>
+                  <option value="03_wednesday_evening_rain" ${themeId === '03_wednesday_evening_rain' ? 'selected' : ''}>03. Forest Rain Midnight</option>
+                  <option value="04_thursday_evening_rain" ${themeId === '04_thursday_evening_rain' ? 'selected' : ''}>04. Heavy Rain on Tin Roof</option>
+                  <option value="05_friday_evening_rain" ${themeId === '05_friday_evening_rain' ? 'selected' : ''}>05. Distant Thunder Storm</option>
+                  <option value="06_saturday_evening_rain" ${themeId === '06_saturday_evening_rain' ? 'selected' : ''}>06. Cozy Car Rain</option>
+                  <option value="07_sunday_evening_rain" ${themeId === '07_sunday_evening_rain' ? 'selected' : ''}>07. Peaceful Rain for Deep Sleep</option>
+                </optgroup>
+                <optgroup label="🌊 Morning Ocean Waves (Locked to this theme)">
+                  <option value="01_monday_morning_ocean" ${themeId === '01_monday_morning_ocean' ? 'selected' : ''}>01. Calm Sunrise Ocean Waves</option>
+                  <option value="02_tuesday_morning_ocean" ${themeId === '02_tuesday_morning_ocean' ? 'selected' : ''}>02. Tropical Beach Morning Waves</option>
+                  <option value="03_wednesday_morning_ocean" ${themeId === '03_wednesday_morning_ocean' ? 'selected' : ''}>03. Quiet Blue Sea Waves</option>
+                  <option value="04_thursday_morning_ocean" ${themeId === '04_thursday_morning_ocean' ? 'selected' : ''}>04. Gentle Shoreline Waves</option>
+                  <option value="05_friday_morning_ocean" ${themeId === '05_friday_morning_ocean' ? 'selected' : ''}>05. Slow Deep Ocean Surf</option>
+                  <option value="06_saturday_morning_ocean" ${themeId === '06_saturday_morning_ocean' ? 'selected' : ''}>06. Tropical Calm Sea Waves</option>
+                  <option value="07_sunday_morning_ocean" ${themeId === '07_sunday_morning_ocean' ? 'selected' : ''}>07. Crystal Clear Ocean Relax</option>
+                </optgroup>
+              </select>
+              <div class="field-hint">Choose one single series or cycle automatically through the weekly nature themes.</div>
+            </div>
+
+            <!-- 2. Target Video Duration -->
+            <div class="config-card">
+              <div class="config-card-head">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <span>2. Video Duration (कितने घंटे का वीडियो बनवाना है)</span>
+              </div>
+              <div class="duration-pills-row" id="activeDurPills">
+                ${[1, 2, 3, 4, 6, 8, 10, 12].map(h => `
+                  <button type="button" class="pill-btn ${(durHours === h && durMins === h * 60) ? 'active' : ''}" onclick="selectDuration(${h})">${h} Hr</button>
+                `).join('')}
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;margin-top:12px;">
+                <span style="font-size:12px;color:var(--text-muted);">Custom Mins (Test):</span>
+                <input type="number" min="1" max="720" value="${durMins}" id="activeDurMins" class="mini-input" onchange="onCustomMinsChange(this.value)" />
+                <span style="font-size:12px;color:#ffffff;font-weight:700;" id="activeDurDisplay">Selected: ${durHours} Hr (${durMins}m)</span>
+              </div>
+            </div>
+
+            <!-- 3. Upload Frequency -->
+            <div class="config-card">
+              <div class="config-card-head">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                <span>3. Upload Frequency (कब कब अपलोड करना है)</span>
+              </div>
+              <div style="display:flex;gap:12px;margin-bottom:12px;">
+                <label class="radio-pill">
+                  <input type="radio" name="activeSchedType" value="daily" ${schedType === 'daily' ? 'checked' : ''} onchange="toggleDaysBox('daily')" />
+                  <span>Daily (हर दिन)</span>
+                </label>
+                <label class="radio-pill">
+                  <input type="radio" name="activeSchedType" value="custom_days" ${schedType === 'custom_days' ? 'checked' : ''} onchange="toggleDaysBox('custom_days')" />
+                  <span>Selected Days (हफ्ते के चुने दिन)</span>
+                </label>
+              </div>
+              <div class="weekdays-row" id="activeWeekdaysBox" style="${schedType === 'custom_days' ? 'display:flex;' : 'display:none;'}">
+                ${['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].map(day => {
+                  const isSel = days.includes(day);
+                  return `<button type="button" class="day-btn ${isSel ? 'active' : ''}" data-day="${day}" id="dayBtn-${day}" onclick="toggleDayPill('${day}')">${day.toUpperCase()}</button>`;
+                }).join('')}
+              </div>
+            </div>
+
+            <!-- 4. Upload Time & Privacy -->
+            <div class="config-card">
+              <div class="config-card-head">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 14 14"></polyline></svg>
+                <span>4. Upload Time & YouTube Privacy</span>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+                <div>
+                  <label class="field-label">Daily Upload Time (IST)</label>
+                  <input type="time" id="activeUploadTime" value="${uploadTime}" class="input-time" />
+                  <div class="field-hint">Asia/Kolkata Timezone</div>
+                </div>
+                <div>
+                  <label class="field-label">YouTube Privacy</label>
+                  <select id="activePrivacy" class="select-field">
+                    <option value="private" ${privacy === 'private' ? 'selected' : ''}>🔒 Private (Test Safe)</option>
+                    <option value="unlisted" ${privacy === 'unlisted' ? 'selected' : ''}>👁️ Unlisted</option>
+                    <option value="public" ${privacy === 'public' ? 'selected' : ''}>🌍 Public (Live)</option>
+                  </select>
+                  <div class="field-hint">Video visibility after auto-upload</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Bottom Actions Bar: Exactly ONE Save Button and ONE Test Pipeline Button -->
+          <div class="detail-footer-bar">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span id="activeTokenStatus" style="font-size:12px;color:#10b981;font-weight:700;font-family:'JetBrains Mono',monospace;">● YouTube Account Connected & Ready</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+              <span id="saveStatusText" style="font-size:12px;color:#10b981;font-weight:700;display:none;">✓ Settings Saved!</span>
+              <button class="btn-save-channel" onclick="saveActiveChannelSettings()">
+                <span>💾 Save Channel Settings</span>
+              </button>
+              <button class="btn-test-pipeline" id="btnTestPipeline" onclick="openTestPipelineModal('${ch.id}', '${(ch.title || '').replace(/'/g, "\\'")}')">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                <span>🚀 Test Full Pipeline & Upload</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      `;
+    }
+
+    function selectDuration(hours) {
+      const pillsContainer = $('activeDurPills');
+      if (pillsContainer) {
+        pillsContainer.querySelectorAll('.pill-btn').forEach(btn => btn.classList.remove('active'));
+        if (event && event.target) event.target.classList.add('active');
+      }
+      $('activeDurMins').value = hours * 60;
+      $('activeDurDisplay').textContent = `Selected: ${hours} Hr (${hours * 60}m)`;
+    }
+
+    function onCustomMinsChange(val) {
+      const mins = parseInt(val) || 5;
+      const hours = Math.round(mins / 60 * 10) / 10;
+      $('activeDurDisplay').textContent = `Selected: ${hours} Hr (${mins}m)`;
+      const pillsContainer = $('activeDurPills');
+      if (pillsContainer) {
+        pillsContainer.querySelectorAll('.pill-btn').forEach(btn => {
+          if (parseInt(btn.textContent) * 60 === mins) {
+            btn.classList.add('active');
+          } else {
+            btn.classList.remove('active');
+          }
+        });
+      }
+    }
+
+    function toggleDaysBox(mode) {
+      const box = $('activeWeekdaysBox');
+      if (box) box.style.display = (mode === 'custom_days') ? 'flex' : 'none';
+    }
+
+    function toggleDayPill(day) {
+      const btn = $(`dayBtn-${day}`);
+      if (btn) btn.classList.toggle('active');
+    }
+
+    async function toggleActiveAutomation(isEnabled) {
+      const badge = $('statusBadge');
+      if (badge) {
+        badge.className = `status-badge ${isEnabled ? 'badge-active' : 'badge-paused'}`;
+        badge.textContent = isEnabled ? '● AUTO-PILOT ON' : '○ PAUSED';
+      }
+      await saveActiveChannelSettings(false);
+      renderAvatarTrack();
+    }
+
+    async function saveActiveChannelSettings(notify = true) {
+      if (!activeChannelId) return;
+      const ch = channelsList.find(c => c.id === activeChannelId);
+      if (!ch) return;
+
+      const themeVal = $('activeThemeSelect').value;
+      const themeMode = (themeVal === 'all_weekly') ? 'all_weekly' : 'specific';
+      const themeId = (themeVal === 'all_weekly') ? '01_monday_evening_rain' : themeVal;
+
+      const totalMins = parseInt($('activeDurMins').value) || 120;
+      const hours = Math.max(1, Math.round(totalMins / 60));
+
+      const schedRadios = document.getElementsByName('activeSchedType');
+      let schedType = 'daily';
+      for (const r of schedRadios) {
+        if (r.checked) { schedType = r.value; break; }
+      }
+
+      const activeDays = [];
+      const weekdaysBox = $('activeWeekdaysBox');
+      if (weekdaysBox) {
+        weekdaysBox.querySelectorAll('.day-btn.active').forEach(b => activeDays.push(b.getAttribute('data-day')));
+      }
+
+      const uploadTime = $('activeUploadTime').value || '18:00';
+      const privacy = $('activePrivacy').value || 'private';
+      const isEnabled = $('autoToggle').checked;
+
+      const newAutomation = {
+        enabled: isEnabled,
+        theme_mode: themeMode,
+        theme_id: themeId,
+        duration_hours: hours,
+        duration_minutes: totalMins,
+        schedule_type: schedType,
+        days: (activeDays.length > 0) ? activeDays : ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'],
+        upload_time: uploadTime,
+        privacy: privacy
+      };
+
+      try {
+        const res = await fetch(`/api/channels/${activeChannelId}/settings`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ automation: newAutomation })
+        });
+        const data = await res.json();
+        if (data.ok) {
+          ch.automation = newAutomation;
+          const statusTag = $('saveStatusText');
+          if (statusTag) {
+            statusTag.style.display = 'inline';
+            setTimeout(() => { statusTag.style.display = 'none'; }, 2500);
+          }
+          if (notify) showToast(`Settings permanently saved for "${ch.title}"!`, 'success');
+        } else {
+          showToast('Failed to save settings: ' + (data.detail || 'Server error'), 'error');
+        }
+      } catch (err) {
+        showToast('Error saving channel settings: ' + err.message, 'error');
+      }
+    }
+
+    async function deleteActiveChannel() {
+      if (!activeChannelId) return;
+      const ch = channelsList.find(c => c.id === activeChannelId);
+      const name = ch ? ch.title : 'this channel';
+      if (!confirm(`Are you sure you want to remove "${name}" from automation?`)) return;
+
+      try {
+        const res = await fetch(`/api/channels/${activeChannelId}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.ok) {
+          showToast(`Channel "${name}" removed.`, 'info');
+          activeChannelId = null;
+          closeChannelSettings();
+          loadChannels();
+        }
+      } catch (err) {
+        showToast('Error removing channel: ' + err.message, 'error');
+      }
+    }
+
+    async function testActiveChannelToken() {
+      if (!activeChannelId) return;
+      showToast('Testing YouTube API token validity...', 'info');
+      try {
+        const res = await fetch(`/api/channels/${activeChannelId}/test-status`, { method: 'POST' });
+        const data = await res.json();
+        const tag = $('activeTokenStatus');
+        if (data.ok) {
+          if (tag) {
+            tag.style.color = '#10b981';
+            tag.textContent = '● Token Active & Verified';
+          }
+          showToast('YouTube OAuth token is active and valid for automatic uploads!', 'success');
+        } else {
+          if (tag) {
+            tag.style.color = '#ef4444';
+            tag.textContent = '● Token Error: ' + (data.status || 'invalid');
+          }
+          showToast('Token validation error: ' + (data.message || 'Please re-connect'), 'error');
+        }
+      } catch (err) {
+        showToast('Error testing token: ' + err.message, 'error');
+      }
+    }
+
+    function openAddChannelModal() {
+      $('addChannelModal').style.display = 'flex';
+    }
+    function closeAddChannelModal() {
+      $('addChannelModal').style.display = 'none';
+    }
+
+    function connectYouTubeOAuth() {
+      window.location.href = '/api/channels/auth/start';
+    }
+
+    async function submitManualChannel() {
+      const title = $('modalChanTitle').value.trim();
+      const handle = $('modalChanHandle').value.trim();
+      const themeVal = $('modalChanTheme').value;
+
+      if (!title) {
+        alert('Please enter a channel name.');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/channels/manual', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: title,
+            custom_url: handle || ('@' + title.toLowerCase().replace(/\s+/g, '')),
+            automation: {
+              enabled: true,
+              theme_mode: (themeVal === 'all_weekly') ? 'all_weekly' : 'specific',
+              theme_id: (themeVal === 'all_weekly') ? '01_monday_evening_rain' : themeVal,
+              duration_hours: 2,
+              duration_minutes: 120,
+              schedule_type: 'daily',
+              upload_time: '18:00',
+              privacy: 'private'
+            }
+          })
+        });
+        const data = await res.json();
+        if (data.ok) {
+          closeAddChannelModal();
+          $('modalChanTitle').value = '';
+          $('modalChanHandle').value = '';
+          showToast(`Channel "${data.channel.title}" created successfully!`, 'success');
+          activeChannelId = data.channel.id;
+          loadChannels();
+        }
+      } catch (err) {
+        showToast('Failed to create channel: ' + err.message, 'error');
+      }
+    }
+
+    // ================= TEST FULL PIPELINE ENGINE =================
+    let currentTestJobId = null;
+    let testPollInterval = null;
+
+    async function openTestPipelineModal(chanId, chanTitle) {
+      const targetId = chanId || activeChannelId;
+      const ch = channelsList.find(c => c.id === targetId);
+      if (!ch) return;
+
+      activeChannelId = ch.id;
+      const modal = $('testPipelineModal');
+      if (!modal) return;
+
+      // Automatically sync latest duration & theme from form into channel if form is open
+      const formDurMins = $('activeDurMins') ? parseInt($('activeDurMins').value) : null;
+      if (formDurMins && formDurMins > 0) {
+        ch.automation = ch.automation || {};
+        ch.automation.duration_minutes = formDurMins;
+        ch.automation.duration_hours = Math.round(formDurMins / 60 * 10) / 10;
+        await saveActiveChannelSettings(false);
+      }
+
+      $('modalTestChanTitle').textContent = `Test Pipeline: ${ch.title}`;
+      const mins = ch.automation?.duration_minutes || 60;
+      const hrs = (mins >= 60 && mins % 60 === 0) ? `${mins / 60} Hr` : `${mins} Minutes`;
+
+      const durLabel = $('testDurLabel');
+      if (durLabel) {
+        durLabel.textContent = `${hrs} (${mins}m)`;
+      }
+
+      const btnRunLabel = $('btnRunTestLabel');
+      if (btnRunLabel) {
+        btnRunLabel.textContent = `🚀 Run ${hrs} Pipeline & Upload to YouTube`;
+      }
+
+      $('testPipelinePreLaunch').style.display = 'block';
+      $('testPipelineRunning').style.display = 'none';
+      $('testPipelineFinished').style.display = 'none';
+      modal.style.display = 'flex';
+    }
+
+    function closeTestPipelineModal() {
+      if (testPollInterval) clearInterval(testPollInterval);
+      $('testPipelineModal').style.display = 'none';
+      loadChannels();
+    }
+
+    async function executeTestPipeline() {
+      if (!activeChannelId) return;
+      const ch = channelsList.find(c => c.id === activeChannelId);
+      if (!ch) return;
+
+      const durRadio = document.querySelector('input[name="testDurOption"]:checked');
+      const isQuick = (durRadio && durRadio.value === 'quick30');
+      const formMins = $('activeDurMins') ? parseInt($('activeDurMins').value) : null;
+      const chanMins = formMins || ch.automation?.duration_minutes || 60;
+      const durSecs = isQuick ? 30 : (chanMins * 60);
+
+      $('testPipelinePreLaunch').style.display = 'none';
+      $('testPipelineRunning').style.display = 'block';
+      $('testPipelineFinished').style.display = 'none';
+
+      // Reset progress bar & steps
+      const pBar = $('pipelineProgressBar');
+      const pPct = $('pipelineBarPercentText');
+      const pStage = $('pipelineLiveStage');
+      if (pBar) pBar.style.width = '0%';
+      if (pPct) pPct.textContent = '0%';
+      if (pStage) pStage.textContent = 'Starting Pipeline...';
+
+      resetPipelineSteps();
+
+      try {
+        const res = await fetch(`/api/channels/${activeChannelId}/test-pipeline`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            duration_seconds: durSecs,
+            use_channel_duration: !isQuick
+          })
+        });
+        const data = await res.json();
+        if (!data.ok) {
+          alert('Failed to start pipeline: ' + (data.detail || data.message || 'Error'));
+          closeTestPipelineModal();
+          return;
+        }
+
+        currentTestJobId = data.job_id;
+        pollTestPipeline(data.job_id, ch);
+      } catch (err) {
+        alert('Pipeline error: ' + err.message);
+        closeTestPipelineModal();
+      }
+    }
+
+    function resetPipelineSteps() {
+      const steps = ['Audio', 'Video', 'Render', 'Upload', 'Email', 'Cleanup'];
+      steps.forEach(s => {
+        const item = $(`stepItem${s}`);
+        const badge = $(`stepBadge${s}`);
+        const sub = $(`stepSub${s}`);
+        if (item) item.className = 'pipeline-step-item';
+        if (badge) { badge.textContent = 'Queued'; badge.style.color = '#777'; }
+        if (sub) sub.textContent = 'Waiting...';
+      });
+    }
+
+    function setStepActive(stepName, subText) {
+      const item = $(`stepItem${stepName}`);
+      const badge = $(`stepBadge${stepName}`);
+      const sub = $(`stepSub${stepName}`);
+      if (item) item.className = 'pipeline-step-item active';
+      if (badge) badge.textContent = 'Running';
+      if (sub && subText) sub.textContent = subText;
+    }
+
+    function setStepCompleted(stepName, subText) {
+      const item = $(`stepItem${stepName}`);
+      const badge = $(`stepBadge${stepName}`);
+      const sub = $(`stepSub${stepName}`);
+      if (item) item.className = 'pipeline-step-item completed';
+      if (badge) badge.textContent = 'Done ✓';
+      if (sub && subText) sub.textContent = subText;
+    }
+
+    function pollTestPipeline(jobId, channel) {
+      if (testPollInterval) clearInterval(testPollInterval);
+
+      testPollInterval = setInterval(async () => {
+        try {
+          const res = await fetch('/api/status');
+          const data = await res.json();
+          const job = data.jobs ? data.jobs[jobId] : null;
+
+          if (!job) return;
+
+          const status = job.status;
+          const prog = Math.min(100, Math.max(0, job.progress || 0));
+          const stepTitle = $('pipelineStepTitle');
+          const stepMsg = $('pipelineStepMsg');
+
+          // Real-time Progress Bar Updates
+          const pBar = $('pipelineProgressBar');
+          const pPct = $('pipelineBarPercentText');
+          const pStage = $('pipelineLiveStage');
+          if (pBar) pBar.style.width = `${prog}%`;
+          if (pPct) pPct.textContent = `${prog}%`;
+          if (pStage && job.message) pStage.textContent = job.message;
+
+          if (status === 'generating_audio') {
+            if (stepTitle) stepTitle.textContent = '🎵 Synthesizing Binaural Audio...';
+            if (stepMsg) stepMsg.textContent = job.message || 'Generating procedural sound wave...';
+            setStepActive('Audio', 'Synthesizing frequencies...');
+          } else if (status === 'generating_video') {
+            setStepCompleted('Audio', 'Procedural audio ready');
+            setStepActive('Video', 'Processing 1080p footage...');
+            if (stepTitle) stepTitle.textContent = '🎬 Generating Nature Video...';
+            if (stepMsg) stepMsg.textContent = job.message || 'Creating 1080p atmospheric nature video...';
+          } else if (status === 'rendering_video') {
+            setStepCompleted('Audio', 'Procedural audio ready');
+            setStepCompleted('Video', '1080p Clip ready');
+            setStepActive('Render', 'FFmpeg seamless looping & audio sync...');
+            if (stepTitle) stepTitle.textContent = '🎞️ Looping & Syncing Video...';
+            if (stepMsg) stepMsg.textContent = job.message || 'Rendering seamless broadcast loop...';
+          } else if (status === 'uploading_youtube') {
+            setStepCompleted('Audio', 'Procedural audio ready');
+            setStepCompleted('Video', 'Clip ready');
+            setStepCompleted('Render', 'Synced MP4 ready');
+            const upPct = job.upload_percent ? ` (${job.upload_percent}%)` : '';
+            setStepActive('Upload', `Uploading to YouTube${upPct}...`);
+            if (stepTitle) stepTitle.textContent = '📤 Uploading to YouTube...';
+            if (stepMsg) stepMsg.textContent = job.message || 'Uploading video to your channel...';
+          } else if (status === 'sending_email') {
+            setStepCompleted('Audio', 'Procedural audio ready');
+            setStepCompleted('Video', 'Clip ready');
+            setStepCompleted('Render', 'Synced MP4 ready');
+            setStepCompleted('Upload', 'Uploaded to YouTube ✓');
+            setStepActive('Email', 'Connecting to smtp.gmail.com:465...');
+            const curEmail = job.recipient_email || (window.currentUser && window.currentUser.email) || 'your Gmail';
+            if (stepTitle) stepTitle.textContent = '📧 Sending Gmail Notification...';
+            if (stepMsg) stepMsg.textContent = `Delivering video link & summary to ${curEmail}...`;
+          } else if (status === 'completed') {
+            clearInterval(testPollInterval);
+            if (pBar) pBar.style.width = '100%';
+            if (pPct) pPct.textContent = '100%';
+            if (pStage) pStage.textContent = 'All tasks completed successfully!';
+            setStepCompleted('Audio', 'Procedural audio ready');
+            setStepCompleted('Video', 'Clip ready');
+            setStepCompleted('Render', 'Synced MP4 ready');
+            setStepCompleted('Upload', `Published: ${job.video_id}`);
+            const finalEmail = job.recipient_email || (window.currentUser && window.currentUser.email) || 'your Gmail';
+            setStepCompleted('Email', job.email_sent ? `Delivered to ${finalEmail}` : 'Sent');
+            setStepCompleted('Cleanup', 'Assets/videos, temp & output purged');
+
+            setTimeout(() => {
+              $('testPipelineRunning').style.display = 'none';
+              $('testPipelineFinished').style.display = 'block';
+
+              $('successVideoTitle').textContent = job.youtube_title || 'Video published to YouTube!';
+              if ($('pipelineSummaryRecipient')) {
+                $('pipelineSummaryRecipient').textContent = finalEmail;
+              }
+              const watchBtn = $('successWatchBtn');
+              if (watchBtn) watchBtn.href = job.video_url || `https://youtu.be/${job.video_id}`;
+
+              const chanBtn = $('successVisitChanBtn');
+              if (chanBtn) {
+                const cUrl = channel?.custom_url ? (channel.custom_url.startsWith('@') ? `https://www.youtube.com/${channel.custom_url}` : `https://www.youtube.com/@${channel.custom_url}`) : `https://www.youtube.com/channel/${channel?.id || activeChannelId}`;
+                chanBtn.href = cUrl;
+              }
+
+              loadChannels();
+            }, 800);
+
+          } else if (status === 'failed') {
+            clearInterval(testPollInterval);
+            alert('Pipeline Test Failed: ' + (job.error || 'Unknown error occurred.'));
+            closeTestPipelineModal();
+          }
+        } catch (e) {
+          console.warn('Polling error:', e);
+        }
+      }, 800);
+    }
+
+    // On Load: Check Authentication & URL parameters
+    window.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const authRes = await fetch('/api/auth/me');
+        const authData = await authRes.json();
+        if (!authData.authenticated || !authData.user) {
+          window.location.href = '/?login_required=1';
+          return;
+        }
+        // Save current user globally and render user chip
+        const user = authData.user;
+        window.currentUser = user;
+        if ($('pipelineSummaryRecipient')) {
+          $('pipelineSummaryRecipient').textContent = user.email;
+        }
+        const navChip = $('nav-user-chip');
+        if (navChip) {
+          navChip.style.display = 'inline-flex';
+          const emailEl = $('nav-user-email');
+          if (emailEl) emailEl.textContent = user.email;
+          const avatarImg = $('nav-user-avatar');
+          const fallback = $('nav-user-fallback');
+          if (user.picture && avatarImg) {
+            avatarImg.src = user.picture;
+            avatarImg.style.display = 'block';
+            if (fallback) fallback.style.display = 'none';
+          } else if (fallback) {
+            fallback.textContent = (user.name || user.email || 'U')[0].toUpperCase();
+          }
+        }
+      } catch (err) {
+        console.warn('Auth check error:', err);
+      }
+
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('connected') === '1') {
+        const title = urlParams.get('title') || 'YouTube Channel';
+        showToast(`🎉 "${title}" connected successfully!`, 'success');
+        if (urlParams.get('channel_id')) {
+          activeChannelId = urlParams.get('channel_id');
+        }
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+      if (urlParams.get('oauth_error')) {
+        showToast(`OAuth Error: ${urlParams.get('oauth_error')}`, 'error');
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+      loadChannels();
+    });
+
+    function toggleMobileNav() {
+      const drawer = document.getElementById('mobile-nav-drawer');
+      const btn = document.getElementById('mobile-toggle-btn');
+      if (!drawer || !btn) return;
+      const isOpen = drawer.classList.contains('open');
+      if (isOpen) {
+        drawer.classList.remove('open');
+        btn.classList.remove('open');
+      } else {
+        drawer.classList.add('open');
+        btn.classList.add('open');
+      }
+    }
+
+    // Close mobile drawer when clicking outside
+    window.addEventListener('click', (e) => {
+      const drawer = document.getElementById('mobile-nav-drawer');
+      const btn = document.getElementById('mobile-toggle-btn');
+      if (drawer && drawer.classList.contains('open') && !drawer.contains(e.target) && btn && !btn.contains(e.target)) {
+        drawer.classList.remove('open');
+        btn.classList.remove('open');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+{
+  "id": "06_saturday_evening_rain",
+  "name": "Cozy Car Rain",
+  "type": "rain",
+  "enabled": true,
+  "duration_minutes": 5,
+  "audio": {
+    "engine": "car_rain",
+    "mix": {
+      "muffled_outdoor_rain": 0.52,
+      "car_body_drops": 0.38,
+      "distant_car_thunder": 0.42,
+      "outside_wind": 0.08
+    },
+    "rain_intensity": {
+      "min": 0.62,
+      "max": 0.84
+    },
+    "roof_resonance": 0.5,
+    "description": "Cozy car rain heard inside a parked car, muffled outdoor rain, subtle windshield and upholstered roof patter, distant muffled thunder outside, intimate close stereo space, very calm and enclosed.",
+    "thunder": {
+      "enabled": true,
+      "muffled": true,
+      "first_strike_seconds": 5.0,
+      "min_gap_seconds": 32.0,
+      "max_gap_seconds": 60.0
+    }
+  },
+  "visual": {
+    "scene": "cozy parked car at night, rain on windshield, warm dashboard glow, blurred lights",
+    "fps": 30,
+    "loop_seconds": 20
+  },
+  "youtube": {
+    "category_id": "10",
+    "privacy": "private",
+    "publish_time": "19:00",
+    "title": "Cozy Car Rain at Night 🚗🌧️ Relaxing Rain Sounds | {duration} Minutes",
+    "tags": [
+      "car rain sounds",
+      "rain on windshield",
+      "night rain",
+      "cozy ambience",
+      "sleep rain"
+    ]
+  }
+}

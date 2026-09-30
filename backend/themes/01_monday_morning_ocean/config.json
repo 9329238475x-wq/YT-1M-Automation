@@ -1,0 +1,41 @@
+{
+  "id": "01_monday_morning_ocean",
+  "name": "Calm Sunrise Ocean Waves",
+  "type": "ocean",
+  "enabled": true,
+  "duration_minutes": 5,
+  "audio": {
+    "engine": "sunrise_ocean",
+    "mood": "calm, fresh, peaceful",
+    "layers": {
+      "deep_surf": 0.28,
+      "rolling_waves": 0.4,
+      "shore_wash": 0.24,
+      "foam_hiss": 0.06,
+      "distant_wind": 0.02
+    },
+    "wave_interval_seconds": {
+      "min": 5,
+      "max": 12
+    },
+    "description": "Calm sunrise ocean waves, soft smooth waves lapping on shore, deep low-frequency ocean movement, fresh morning sea breeze, peaceful meditation background."
+  },
+  "visual": {
+    "scene": "peaceful sunrise beach, soft golden light, gentle waves",
+    "fps": 30,
+    "loop_seconds": 20
+  },
+  "youtube": {
+    "category_id": "10",
+    "privacy": "private",
+    "publish_time": "07:00",
+    "title": "Calm Sunrise Ocean Waves 🌊 Peaceful Sea Sounds | {duration} Minutes",
+    "tags": [
+      "ocean sounds",
+      "sea waves",
+      "waves for sleep",
+      "relaxing ocean",
+      "morning ambience"
+    ]
+  }
+}

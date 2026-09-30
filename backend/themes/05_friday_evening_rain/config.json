@@ -1,0 +1,46 @@
+{
+  "id": "05_friday_evening_rain",
+  "name": "Distant Thunder Storm",
+  "type": "rain",
+  "enabled": true,
+  "duration_minutes": 5,
+  "audio": {
+    "engine": "distant_thunder_storm",
+    "mix": {
+      "foreground_rain": 0.64,
+      "distant_thunder": 0.42,
+      "gentle_wind": 0.11
+    },
+    "rain_intensity": {
+      "min": 0.72,
+      "max": 0.94
+    },
+    "roof_resonance": 0.4,
+    "thunder": {
+      "enabled": true,
+      "distant": true,
+      "first_strike_seconds": 5.0,
+      "min_gap_seconds": 38.0,
+      "max_gap_seconds": 68.0
+    },
+    "description": "Steady soft/medium rain in foreground, natural distant thunder rumbles in background with long random gaps, gentle storm wind, deep cinematic sleep-friendly atmosphere."
+  },
+  "visual": {
+    "scene": "dark storm clouds over distant forest, rain curtain, occasional soft lightning",
+    "fps": 30,
+    "loop_seconds": 20
+  },
+  "youtube": {
+    "category_id": "10",
+    "privacy": "private",
+    "publish_time": "19:00",
+    "title": "Distant Thunder & Heavy Rain ⛈️ Storm Sounds for Sleep | {duration} Minutes",
+    "tags": [
+      "thunderstorm sounds",
+      "heavy rain",
+      "distant thunder",
+      "storm ambience",
+      "sleep sounds"
+    ]
+  }
+}
