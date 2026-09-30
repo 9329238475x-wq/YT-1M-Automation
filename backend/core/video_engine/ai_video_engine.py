@@ -15,9 +15,31 @@ ASSETS_VIDEOS.mkdir(parents=True, exist_ok=True)
 
 # Nature Video CDN library for automatic self-healing downloads
 NATURE_LIBRARY = {
+    # 1. Cozy Mountain Hut / Cabin Rain (For 03_wednesday_cozy_cabin_rain)
+    "rain_cabin_hut_1080p.mp4": "https://upload.wikimedia.org/wikipedia/commons/f/f0/Rain_cats_and_dogs_at_TOUDEN-GOYA%28mountain_hut%29_in_OZE.webm",
+
+    # 2. Thunderstorm & Night Lightning (For 02_tuesday_deep_thunder)
+    "rain_thunder_lightning_1080p.mp4": "https://upload.wikimedia.org/wikipedia/commons/9/9a/Lightning_Storm_in_Rolla.webm",
+
+    # 3. Forest & Pine Trees Rain (For 06_saturday_forest_gentle_rain)
+    "rain_forest_trees_1080p.mp4": "https://upload.wikimedia.org/wikipedia/commons/4/44/Saule_pleureur_au_printemps_sous_la_pluie.webm",
+
+    # 4. Tin Roof / Puddles / Porch Downpour (For 05_friday_tin_roof_rain)
+    "rain_puddles_porch_1080p.mp4": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Puddles_of_rain.webm",
+
+    # 5. Dark Sleep Night Rain (For 07_sunday_night_sleep_rain)
+    "rain_dark_night_1080p.mp4": "https://upload.wikimedia.org/wikipedia/commons/8/85/Rainy_Night.webm",
+
+    # 6. Calm Lake & Misty Autumn Rain (For 01_monday_evening_rain)
+    "rain_calm_lake_1080p.mp4": "https://upload.wikimedia.org/wikipedia/commons/d/d2/Overlooking_Browne_Lake_on_a_Calm_Rainy_Morning_in_Late_Autumn.webm",
+
+    # 7. Bedroom Window Droplets (For 04_thursday_rain_on_window)
     "rain_window_heavy_1080p.mp4": "https://upload.wikimedia.org/wikipedia/commons/c/cc/Radevormwald_-_Raindrops_on_a_window_07_%281%29_ies.webm",
-    "rain_window_1080p.mp4": "https://upload.wikimedia.org/wikipedia/commons/2/2e/Radevormwald_-_Raindrops_on_a_window_10_%281%29_ies.webm",
+
+    # 8. POV Car Windshield Rain
     "rain_car_night_1080p.mp4": "https://upload.wikimedia.org/wikipedia/commons/a/a5/The_nighttime_attack_of_freezing_rain_rattled_the_front_windows_of_the_car..webm",
+
+    # 9. Ocean Waves Shoreline
     "ocean_waves_1080p.mp4": "https://upload.wikimedia.org/wikipedia/commons/0/09/Water_waves_in_Herzliya_beach.webm",
 }
 
@@ -143,32 +165,60 @@ def build_master_video_prompt(theme_config: dict) -> str:
     return rain_prompts.get(engine_name, rain_prompts["cabin_rain"])
 
 
-# ---------- 2. DIVERSE CLIP SELECTOR (DIFFERENT CLIP PER THEME & SEED) ----------
+# ---------- 2. DIVERSE CLIP SELECTOR (MATCHES VISUAL DIRECTLY TO SOUNDSCAPE) ----------
 
 def select_theme_nature_video(theme_config: dict, seed: int = 42) -> Path:
     """
-    Selects a distinct, high-quality video clip based on theme type, ambience sub-style,
-    and seed variation. Auto-downloads and restores clip if missing.
+    Selects a distinct, high-quality video clip based on theme type and ambience sub-style.
+    Matches the visual scene directly to the soundscape:
+      - Monday (Cabin) -> Real mountain hut / cabin in pouring rain
+      - Tuesday (Window) -> Real glass raindrops sliding down window
+      - Wednesday (Forest) -> Real rain pouring on lush green trees & foliage
+      - Thursday (Tin Roof) -> Real water cascading off roof into puddles
+      - Friday (Thunderstorm) -> Real dark lightning storm in night sky
+      - Saturday (Car Rain) -> Real windshield POV rain in storm
+      - Sunday (Deep Sleep) -> Real dark atmospheric rainy night
+      - Ocean Waves -> Real ocean rolling waves
     """
-    theme_type = theme_config.get("type", "rain")
+    theme_type = str(theme_config.get("type", "rain")).lower()
     audio_cfg = theme_config.get("audio", {})
-    engine_name = audio_cfg.get("engine", "rain").lower()
-    theme_id = theme_config.get("id", "").lower()
+    engine_name = str(audio_cfg.get("engine", "rain")).lower()
+    theme_id = str(theme_config.get("id", "")).lower()
+    theme_name = str(theme_config.get("name", "")).lower()
 
-    if theme_type == "ocean":
+    if theme_type == "ocean" or "ocean" in engine_name or "ocean" in theme_name:
         return ensure_clip_exists("ocean_waves_1080p.mp4")
 
-    # --- Rain Variations ---
     # 1. Car Rain (POV through windshield at night)
-    if "car" in theme_id or "car" in engine_name or (seed % 4 == 1):
+    if "car" in engine_name or "car" in theme_name or "car" in theme_id:
         return ensure_clip_exists("rain_car_night_1080p.mp4")
 
-    # 2. Heavy Torrential Rain / Tin Roof / Cabin Storm
-    if "heavy" in theme_id or "tin_roof" in engine_name or "cabin" in engine_name or "thunder" in theme_id or (seed % 4 == 2):
+    # 2. Cabin / Mountain Hut Rain
+    if "cabin" in engine_name or "cabin" in theme_name or "cabin" in theme_id:
+        return ensure_clip_exists("rain_cabin_hut_1080p.mp4")
+
+    # 3. Thunderstorm & Lightning
+    if "thunder" in engine_name or "thunder" in theme_name or "storm" in engine_name or "storm" in theme_name or "lightning" in engine_name:
+        return ensure_clip_exists("rain_thunder_lightning_1080p.mp4")
+
+    # 4. Forest & Pine Trees Nature Rain
+    if "forest" in engine_name or "forest" in theme_name or "forest" in theme_id:
+        return ensure_clip_exists("rain_forest_trees_1080p.mp4")
+
+    # 5. Tin Roof / Porch / Splashing Puddles
+    if "tin_roof" in engine_name or "tin" in theme_name or "roof" in engine_name or "roof" in theme_name:
+        return ensure_clip_exists("rain_puddles_porch_1080p.mp4")
+
+    # 6. Night Sleep Rain / Insomnia Calm
+    if "sleep" in engine_name or "sleep" in theme_name or "peaceful" in theme_name or "sleep" in theme_id:
+        return ensure_clip_exists("rain_dark_night_1080p.mp4")
+
+    # 7. Bedroom Window Droplets
+    if "window" in engine_name or "window" in theme_name or "window" in theme_id:
         return ensure_clip_exists("rain_window_heavy_1080p.mp4")
 
-    # 3. Soft Window Droplets / Bedroom Sleep Rain
-    return ensure_clip_exists("rain_window_1080p.mp4")
+    # Fallback to calm lake rain
+    return ensure_clip_exists("rain_calm_lake_1080p.mp4")
 
 
 # ---------- 3. HUGGING FACE SPACES AI VIDEO GENERATOR ----------
