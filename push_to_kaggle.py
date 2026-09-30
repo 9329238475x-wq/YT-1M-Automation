@@ -32,7 +32,7 @@ payload = {
     "language": "python",
     "kernelType": "notebook",
     "isPrivate": metadata.get("is_private", "true") in [True, "true", "True"],
-    "enableGpu": False,
+    "enableGpu": metadata.get("enable_gpu", "true") in [True, "true", "True"],
     "enableTpu": False,
     "enableInternet": True,
     "datasetDataSources": [],

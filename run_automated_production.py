@@ -105,10 +105,20 @@ def run_pipeline(
     dur_exact_timestamp = f"{h:02d}:{m:02d}:{s:02d}"
     dur_display = f"{int(duration_hours)} Hours" if duration_hours >= 1 else f"{int(total_seconds // 60)} Minutes"
 
+    # Hardware acceleration detection (GPU NVIDIA T4 / CPU Fallback)
+    hw_mode = "CPU"
+    try:
+        import torch
+        if torch.cuda.is_available():
+            hw_mode = f"NVIDIA GPU ({torch.cuda.get_device_name(0)})"
+    except Exception:
+        pass
+
     print("=" * 75)
     print("YT-1M AUTONOMOUS KAGGLE / CLOUD PRODUCTION RUNNER")
     print(f"Target Duration  : {dur_display} (Exact Runtime: {dur_exact_timestamp} / {total_seconds}s)")
     print(f"Target Channel   : {channel_id}")
+    print(f"Hardware Engine  : {hw_mode} (Automatic Fallback Active)")
     print(f"Privacy Mode     : {privacy.upper()}")
     print(f"Alert Email      : {recipient_email}")
     print("=" * 75)
