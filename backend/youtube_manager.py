@@ -403,6 +403,29 @@ def upload_video_to_channel(
 
     logger.info(f"SUCCESS: Video uploaded to YouTube with ID: {video_id}")
 
+    # Automatically extract and set High-Definition Custom Thumbnail
+    try:
+        thumb_path = v_path.parent / f"thumb_{video_id}.jpg"
+        cmd = [
+            "ffmpeg", "-y",
+            "-ss", "00:00:03",
+            "-i", str(v_path),
+            "-vframes", "1",
+            "-q:v", "2",
+            str(thumb_path)
+        ]
+        subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+        if thumb_path.exists() and thumb_path.stat().st_size > 1000:
+            thumb_media = MediaFileUpload(str(thumb_path), mimetype="image/jpeg")
+            youtube.thumbnails().set(videoId=video_id, media_body=thumb_media).execute()
+            logger.info(f"Custom HD thumbnail uploaded successfully for {video_id}!")
+            try:
+                thumb_path.unlink()
+            except Exception:
+                pass
+    except Exception as e:
+        logger.warning(f"Notice on auto custom thumbnail: {e}")
+
     # Update tool_uploads_count and last upload in channels.json
     channels = load_channels()
     ch_found = False
