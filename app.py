@@ -2,6 +2,13 @@ import os
 import uvicorn
 from backend.server import app
 
+# Hugging Face Spaces integration
+try:
+    import gradio as gr
+    demo = gr.mount_gradio_app(app, gr.Blocks(title="YT-1M Studio Pro"), path="/gradio")
+except Exception:
+    demo = app
+
 # Hugging Face Spaces default port is 7860
 port = int(os.environ.get("PORT", 7860))
 
