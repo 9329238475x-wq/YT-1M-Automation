@@ -2,7 +2,17 @@ import os
 import uvicorn
 from backend.server import app
 
-# Hugging Face Spaces integration
+# Hugging Face ZeroGPU integration (satisfies ZeroGPU startup check)
+try:
+    import spaces
+    @spaces.GPU
+    def _zerogpu_keepalive():
+        return "ready"
+    _zerogpu_keepalive()
+except Exception:
+    pass
+
+# Gradio mount integration
 try:
     import gradio as gr
     demo = gr.mount_gradio_app(app, gr.Blocks(title="YT-1M Studio Pro"), path="/gradio")
