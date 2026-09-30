@@ -159,7 +159,12 @@ def run_pipeline(
         print("=" * 75)
 
         # 1. Theme Configuration & USA Slot Resolution
-        if not theme_id or theme_id == "auto":
+        if slot == "dual":
+            if ch_idx == 1:
+                curr_theme_id, resolved_slot = "01_monday_evening_rain", "evening"
+            else:
+                curr_theme_id, resolved_slot = "01_monday_morning_ocean", "morning"
+        elif not theme_id or theme_id == "auto":
             curr_theme_id, resolved_slot = auto_select_daily_theme(slot=slot)
         else:
             curr_theme_id = theme_id
@@ -305,7 +310,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="YT-1M Autonomous Production Pipeline")
     parser.add_argument("--duration_hours", type=float, default=12.0, help="Duration in hours (e.g. 12.0)")
     parser.add_argument("--theme", type=str, default="auto", help="Theme ID or 'auto'")
-    parser.add_argument("--slot", type=str, default="auto", choices=["auto", "morning", "evening"], help="Target slot: morning (ocean) or evening (rain)")
+    parser.add_argument("--slot", type=str, default="auto", choices=["auto", "morning", "evening", "dual"], help="Target slot: morning (ocean), evening (rain), or dual (channel 1 rain + channel 2 ocean)")
     parser.add_argument("--channel_id", type=str, default="all", help="YouTube Channel ID or 'all' for all connected channels")
     parser.add_argument("--privacy", type=str, default="public", help="public or private")
     parser.add_argument("--recipient_email", type=str, default="9329238475x@gmail.com", help="Notification Email")
