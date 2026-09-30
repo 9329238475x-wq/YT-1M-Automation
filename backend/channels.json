@@ -36,5 +36,40 @@
     "last_upload_at": "2026-09-29T03:28:56.127675",
     "last_uploaded_video_id": "bgdc_tp_cpA",
     "last_uploaded_video_title": "Midnight Cabin Heavy Rain | Rain Sounds for Deep Sleep, Relax & Study [1 Minutes]"
+  },
+  {
+    "id": "UCAZYYi8HdhjPv2vTmc-Uv7Q",
+    "title": "Velvet Drift Ambience",
+    "custom_url": "@velvetdriftambience",
+    "description": "Welcome to Velvet Drift Ambience — where calming nature meets restorative rest..\n\n🌅 MORNING RELEASE (6:30 AM EST):\nShore",
+    "thumbnail": "https://yt3.ggpht.com/weE0YrrrsWIO1EZgVnJy17JFlWEbXl3eTsJdK92Y-C0tnCW-n40YmWHgw1He05HFbcE9qMzY=s800-c-k-c0x00ffffff-no-rj",
+    "subscriber_count": "13",
+    "video_count": "1",
+    "tool_uploads_count": 0,
+    "connected_at": "2026-10-01T01:02:24.339413",
+    "last_connected": "2026-10-01T01:02:24.339413",
+    "token_file": "backend/tokens/token_UCAZYYi8HdhjPv2vTmc-Uv7Q.json",
+    "status": "connected",
+    "owner_email": "9329238475x@gmail.com",
+    "automation": {
+      "enabled": true,
+      "theme_mode": "all_weekly",
+      "theme_id": "01_monday_evening_rain",
+      "duration_hours": 12,
+      "duration_minutes": 720,
+      "schedule_type": "daily",
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat",
+        "sun"
+      ],
+      "upload_time": "19:00",
+      "upload_delay_hours": 1,
+      "privacy": "public"
+    }
   }
 ]

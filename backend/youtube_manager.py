@@ -337,10 +337,12 @@ def upload_video_to_channel(
     privacy: str = "private",
     category_id: str = "10",
     progress_callback: Optional[callable] = None,
+    publish_at: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
     Uploads a video to YouTube using the authenticated credentials for the given channel.
     Automatically increments tool_uploads_count in channels.json on success.
+    Supports publish_at for scheduled staggered release.
     """
     v_path = Path(video_path)
     if not v_path.exists():
@@ -352,6 +354,13 @@ def upload_video_to_channel(
 
     youtube = googleapiclient.discovery.build("youtube", "v3", credentials=creds)
 
+    status_dict: Dict[str, Any] = {
+        "privacyStatus": "private" if publish_at else (privacy if privacy in ["private", "unlisted", "public"] else "private"),
+        "selfDeclaredMadeForKids": False,
+    }
+    if publish_at:
+        status_dict["publishAt"] = publish_at
+
     body = {
         "snippet": {
             "title": title[:100],
@@ -359,13 +368,10 @@ def upload_video_to_channel(
             "tags": tags[:30] if tags else ["rain sounds", "sleep sounds", "meditation"],
             "categoryId": category_id or "10",
         },
-        "status": {
-            "privacyStatus": privacy if privacy in ["private", "unlisted", "public"] else "private",
-            "selfDeclaredMadeForKids": False,
-        },
+        "status": status_dict,
     }
 
-    logger.info(f"Initiating YouTube video upload to channel {channel_id}: {title} (Privacy: {privacy})")
+    logger.info(f"Initiating YouTube video upload to channel {channel_id}: {title} (Privacy: {privacy}, Scheduled: {publish_at})")
     media = MediaFileUpload(
         str(v_path),
         mimetype="video/mp4",
@@ -373,11 +379,26 @@ def upload_video_to_channel(
         chunksize=1024 * 1024 * 5,
     )
 
-    request = youtube.videos().insert(
-        part="snippet,status",
-        body=body,
-        media_body=media,
-    )
+    try:
+        request = youtube.videos().insert(
+            part="snippet,status",
+            body=body,
+            media_body=media,
+        )
+    except Exception as exc:
+        if publish_at:
+            logger.warning(f"Scheduled publish not accepted for channel {channel_id} ({exc}), falling back to direct {privacy} upload...")
+            body["status"] = {
+                "privacyStatus": privacy if privacy in ["private", "unlisted", "public"] else "private",
+                "selfDeclaredMadeForKids": False,
+            }
+            request = youtube.videos().insert(
+                part="snippet,status",
+                body=body,
+                media_body=media,
+            )
+        else:
+            raise exc
 
     response = None
     while response is None:

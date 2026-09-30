@@ -225,6 +225,19 @@ def run_pipeline(
 
         print(f"\n[Step 5/5] Uploading to YouTube Channel {curr_chan_title} ({curr_chan_id}) at Cloud Speed (1 Gbps)...")
 
+        # Staggered upload scheduling: e.g. Channel 2 releases 1 hour after Channel 1
+        chan_automation = target_ch.get("automation", {})
+        delay_hours = chan_automation.get("upload_delay_hours", 0)
+        if ch_idx > 1 and delay_hours == 0:
+            delay_hours = (ch_idx - 1) * 1
+
+        publish_at_iso = None
+        if delay_hours > 0 and privacy == "public":
+            from datetime import timedelta
+            publish_time = datetime.now(timezone.utc) + timedelta(hours=delay_hours)
+            publish_at_iso = publish_time.strftime("%Y-%m-%dT%H:%M:%SZ")
+            print(f"           [Smart Stagger] Scheduled Release: +{delay_hours} Hour Delay (Goes live at {publish_at_iso} UTC)")
+
         def on_progress(pct: int):
             if pct % 20 == 0 or pct == 100:
                 print(f"           Upload Progress: {pct}%")
@@ -237,11 +250,13 @@ def run_pipeline(
             tags=tags,
             privacy=privacy,
             progress_callback=on_progress,
+            publish_at=publish_at_iso,
         )
 
         video_id = upload_res.get("video_id")
         video_url = upload_res.get("url", f"https://youtu.be/{video_id}")
-        print(f"\n🎉 SUCCESS! VIDEO IS LIVE ON YOUTUBE!")
+        status_tag = f"SCHEDULED (+{delay_hours}h)" if publish_at_iso else "LIVE"
+        print(f"\n🎉 SUCCESS! VIDEO IS {status_tag} ON YOUTUBE!")
         print(f"   Channel  : {curr_chan_title}")
         print(f"   Video ID : {video_id}")
         print(f"   Watch URL: {video_url}")
