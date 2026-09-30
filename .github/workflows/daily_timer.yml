@@ -1,0 +1,36 @@
+name: YT-1M 2X Daily USA Production (Kaggle Cloud Runner)
+
+on:
+  schedule:
+    # 1. USA Morning Slot (6:30 AM EST / 10:30 UTC / 4:00 PM IST) -> Morning Ocean Waves
+    - cron: '30 10 * * *'
+    # 2. USA Evening Bedtime Slot (8:00 PM EST / 00:00 UTC / 5:30 AM IST) -> Evening Sleep Rain
+    - cron: '0 0 * * *'
+
+  workflow_dispatch:
+
+jobs:
+  trigger-kaggle-cloud-production:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Kaggle CLI
+        run: |
+          pip install --upgrade kaggle requests
+
+      - name: Configure Kaggle API Credentials
+        run: |
+          mkdir -p ~/.kaggle
+          echo '{"username":"sonuji93","key":"30359df27329878ca4326b93196c3d59"}' > ~/.kaggle/kaggle.json
+          chmod 600 ~/.kaggle/kaggle.json
+
+      - name: Deploy & Trigger Kaggle Autonomous Runner
+        run: |
+          python push_to_kaggle.py
