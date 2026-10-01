@@ -17,8 +17,8 @@
       "enabled": true,
       "theme_mode": "all_weekly",
       "theme_id": "01_monday_evening_rain",
-      "duration_hours": 12,
-      "duration_minutes": 720,
+      "duration_hours": 10,
+      "duration_minutes": 600,
       "schedule_type": "daily",
       "days": [
         "mon",
@@ -55,8 +55,8 @@
       "enabled": true,
       "theme_mode": "all_weekly",
       "theme_id": "01_monday_evening_rain",
-      "duration_hours": 12,
-      "duration_minutes": 720,
+      "duration_hours": 10,
+      "duration_minutes": 600,
       "schedule_type": "daily",
       "days": [
         "mon",

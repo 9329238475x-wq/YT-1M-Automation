@@ -115,7 +115,7 @@ def cleanup_all():
 
 
 def run_pipeline(
-    duration_hours: float = 12.0,
+    duration_hours: float = 10.0,
     theme_id: str | None = None,
     slot: str = "auto",
     channel_id: str = "all",
@@ -176,9 +176,9 @@ def run_pipeline(
         # Unique seed per channel + render prevents any cross-channel duplicate content!
         seed = (random.randint(1000, 999999) + abs(hash(curr_chan_id))) % 1000000
 
-        # Unique natural duration variation (+1m 15s to +11m 45s) per channel
+        # Unique natural duration variation (+1m to +8m) per channel
         # Ensures even across multiple channels, no two videos ever share identical timestamps
-        random_offset_seconds = random.randint(75, 705)
+        random_offset_seconds = random.randint(60, 480)
         total_seconds = base_seconds + random_offset_seconds
         h = total_seconds // 3600
         m = (total_seconds % 3600) // 60
@@ -308,7 +308,7 @@ def run_pipeline(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="YT-1M Autonomous Production Pipeline")
-    parser.add_argument("--duration_hours", type=float, default=12.0, help="Duration in hours (e.g. 12.0)")
+    parser.add_argument("--duration_hours", type=float, default=10.0, help="Duration in hours (e.g. 10.0)")
     parser.add_argument("--theme", type=str, default="auto", help="Theme ID or 'auto'")
     parser.add_argument("--slot", type=str, default="auto", choices=["auto", "morning", "evening", "dual"], help="Target slot: morning (ocean), evening (rain), or dual (channel 1 rain + channel 2 ocean)")
     parser.add_argument("--channel_id", type=str, default="all", help="YouTube Channel ID or 'all' for all connected channels")

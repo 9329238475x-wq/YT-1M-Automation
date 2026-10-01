@@ -515,7 +515,7 @@ def build_youtube_seo_metadata(theme_config: dict, duration_seconds: int) -> dic
             atmosphere_desc = "calming ocean tides, rhythmic sea waves lapping on the shore, and peaceful coastal waters"
 
         search_queries = (
-            "ocean sounds for sleeping, ocean waves for sleep 12 hours, relaxing ocean sounds, "
+            "ocean sounds for sleeping, ocean waves for sleep 10 hours, relaxing ocean sounds, "
             "gentle sea waves, beach waves sounds, calming ocean sounds, ocean sounds to fall asleep, "
             "sea sounds for meditation, ocean waves white noise, coastal ambience, sunrise beach waves, "
             "ocean surf sleep, soothing ocean waves, insomnia relief ocean, peaceful water sounds, "
@@ -532,7 +532,7 @@ def build_youtube_seo_metadata(theme_config: dict, duration_seconds: int) -> dic
             "ocean sounds", "ocean waves", "sea waves for sleep", "relaxing ocean",
             "morning ambience", "waves sound", "calm ocean", "sleep sounds",
             "ocean white noise", "meditation ocean", "peaceful waves", "beach waves",
-            "ocean sounds 12 hours", "sea waves sounds for sleeping", "water sounds",
+            "ocean sounds 10 hours", "sea waves sounds for sleeping", "water sounds",
             "insomnia relief", "deep sleep nature", "coastal ambience", "asmr ocean"
         ]
 
@@ -548,7 +548,7 @@ def build_youtube_seo_metadata(theme_config: dict, duration_seconds: int) -> dic
             atmosphere_desc = "peaceful steady rainfall, soothing nature white noise, and calming ambient raindrops"
 
         search_queries = (
-            "rain sounds for sleeping, heavy rain sounds, rain and thunder, rain sounds for sleep 12 hours, "
+            "rain sounds for sleeping, heavy rain sounds, rain and thunder, rain sounds for sleep 10 hours, "
             "rain on tin roof, cabin rain sounds, rain sounds for insomnia, cozy rain ambience, "
             "rain noise for sleep, dark screen rain, rain sounds to study to, relaxing rain, "
             "thunder and rain sounds, gentle rain, sleep meditation rain, nature white noise, "
@@ -576,7 +576,7 @@ def build_youtube_seo_metadata(theme_config: dict, duration_seconds: int) -> dic
         tags = [
             "rain sounds", "rain sounds for sleep", "heavy rain", "sleep ambience",
             "rain on window", "cabin rain", "relaxing rain", "white noise", "study rain",
-            "rain sounds 12 hours", "peaceful rain", "rain and thunder", "rain for insomnia",
+            "rain sounds 10 hours", "peaceful rain", "rain and thunder", "rain for insomnia",
             "rain on roof", "gentle rain sounds", "nature sounds sleep", "rain sounds adhd",
             "sleep therapy rain", "asmr rain sounds"
         ]
@@ -595,14 +595,14 @@ def build_youtube_seo_metadata(theme_config: dict, duration_seconds: int) -> dic
         f"✓ Deep Sleep & Insomnia Relief: Natural white/pink noise drowns out disruptive background noises.\n"
         f"✓ Tinnitus & Stress Masking: Gentle organic frequencies soothe ringing in the ears.\n"
         f"✓ ADHD & Study Focus: Steady ambient frequencies boost reading stamina and deep work.\n"
-        f"✓ Full Overnight Rest: 12+ hours continuous playback without loud ad interruptions.\n\n"
+        f"✓ Full Overnight Rest: 10+ hours continuous playback without loud ad interruptions.\n\n"
         f"⏳ Ambient Journey / Chapters:\n"
         f"00:00:00 - Drifting into Relaxation & Calm\n"
         f"02:00:00 - Slowing Heart Rate & Silencing Racing Thoughts\n"
         f"04:00:00 - Transitioning to Delta Wave Deep Sleep\n"
-        f"07:00:00 - Restorative REM Sleep Cycle\n"
-        f"10:00:00 - Deep Night Calm & Gentle Dreaming\n"
-        f"11:45:00 - Peaceful Awakening & Morning Calm\n\n"
+        f"06:30:00 - Restorative REM Sleep Cycle\n"
+        f"08:30:00 - Deep Night Calm & Gentle Dreaming\n"
+        f"09:45:00 - Peaceful Awakening & Morning Calm\n\n"
         f"🎧 Optimal Listening Tips:\n"
         f"• Listen with comfortable sleep headphones, earbuds, or a bedside speaker at low-to-medium volume.\n"
         f"• Dim your screen brightness or use dark mode for the most relaxing sleep environment.\n"
