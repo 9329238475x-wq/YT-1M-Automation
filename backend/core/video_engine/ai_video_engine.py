@@ -73,12 +73,18 @@ def ensure_clip_exists(clip_name: str) -> Path:
             "-vf", "scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,setpts=PTS-STARTPTS,format=yuv420p",
             "-c:v", "libx264",
             "-preset", "veryfast",
-            "-crf", "19",
+            "-crf", "26",
+            "-maxrate", "1500k",
+            "-bufsize", "3000k",
             "-pix_fmt", "yuv420p",
             "-an",
             str(target)
         ]
-        subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+        res = subprocess.run(cmd, capture_output=True, text=True)
+        if res.returncode != 0:
+            err_msg = res.stderr[-1000:] if res.stderr else "Unknown error"
+            print(f"  [Stock Clip] FFmpeg error: {err_msg}")
+            raise RuntimeError(f"Stock clip conversion failed: {err_msg}")
     finally:
         if temp_bin.exists():
             try:
@@ -343,12 +349,18 @@ def create_seamless_crossfade_block(
         "-map", map_out,
         "-c:v", "libx264",
         "-preset", "veryfast",
-        "-crf", "19",
+        "-crf", "28",
+        "-maxrate", "1200k",
+        "-bufsize", "2400k",
         "-pix_fmt", "yuv420p",
         "-an",
         str(out),
     ]
-    subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+    res = subprocess.run(cmd, capture_output=True, text=True)
+    if res.returncode != 0:
+        err_msg = res.stderr[-1000:] if res.stderr else "Unknown error"
+        print(f"  [Looper] Seamless block generation error:\n{err_msg}")
+        raise RuntimeError(f"Seamless block generation failed: {err_msg}")
     return out
 
 
@@ -402,7 +414,7 @@ def render_looped_video_with_audio(
         use_fast_stream_copy = False
 
     if use_fast_stream_copy:
-        # Lightning fast stream-copy: full 1-hour or 2-hour 1080p rendered in ~3-5 seconds!
+        # Lightning fast stream-copy: full 1080p rendered in seconds
         cmd = [
             "ffmpeg", "-y",
             "-stream_loop", "-1",
@@ -412,7 +424,7 @@ def render_looped_video_with_audio(
             "-t", str(duration_seconds),
             "-c:v", "copy",
             "-c:a", "aac",
-            "-b:a", "192k",
+            "-b:a", "128k",
             "-ar", "48000",
             "-movflags", "+faststart",
             str(out),
@@ -431,7 +443,9 @@ def render_looped_video_with_audio(
             "-map", "1:a:0",
             "-c:v", "libx264",
             "-preset", "veryfast",
-            "-crf", "19",
+            "-crf", "28",
+            "-maxrate", "1200k",
+            "-bufsize", "2400k",
             "-g", "25",
             "-keyint_min", "25",
             "-sc_threshold", "0",
@@ -439,14 +453,18 @@ def render_looped_video_with_audio(
             "-flags", "+cgop",
             "-avoid_negative_ts", "make_zero",
             "-c:a", "aac",
-            "-b:a", "192k",
+            "-b:a", "128k",
             "-ar", "48000",
             "-pix_fmt", "yuv420p",
             "-movflags", "+faststart",
             str(out),
         ]
 
-    subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+    res = subprocess.run(cmd, capture_output=True, text=True)
+    if res.returncode != 0:
+        err_msg = res.stderr[-1500:] if res.stderr else "Unknown error"
+        print(f"  [Looper] FFmpeg Error:\n{err_msg}")
+        raise RuntimeError(f"FFmpeg render failed with exit code {res.returncode}: {err_msg}")
 
     # Cleanup temporary seamless block
     if temp_seamless_block.exists():
