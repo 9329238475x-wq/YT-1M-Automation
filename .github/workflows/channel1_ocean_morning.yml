@@ -1,16 +1,13 @@
-name: YT-1M 2X Daily USA Production (Kaggle Cloud Runner)
+name: Channel 1 - USA Morning Ocean Waves (6:30 AM EST / 4:00 PM IST)
 
 on:
   schedule:
-    # 1. USA Morning Slot (6:30 AM EST / 10:30 UTC / 4:00 PM IST) -> Morning Ocean Waves
+    # USA Morning Slot (6:30 AM EST / 10:30 UTC / 4:00 PM IST) -> Morning Ocean Waves
     - cron: '30 10 * * *'
-    # 2. USA Evening Bedtime Slot (8:00 PM EST / 00:00 UTC / 5:30 AM IST) -> Evening Sleep Rain
-    - cron: '0 0 * * *'
-
   workflow_dispatch:
 
 jobs:
-  trigger-kaggle-cloud-production:
+  trigger-ocean-morning-production:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -31,6 +28,6 @@ jobs:
           echo '{"username":"sonuji93","key":"30359df27329878ca4326b93196c3d59"}' > ~/.kaggle/kaggle.json
           chmod 600 ~/.kaggle/kaggle.json
 
-      - name: Deploy & Trigger Kaggle Autonomous Runner
+      - name: Deploy & Trigger Morning Ocean Waves on Kaggle
         run: |
-          python push_to_kaggle.py
+          python push_to_kaggle.py --slot morning

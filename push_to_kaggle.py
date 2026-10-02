@@ -4,15 +4,21 @@ Works seamlessly locally AND in GitHub Actions (without leaking secrets to GitHu
 """
 import os
 import sys
+import re
 import shutil
+import argparse
 import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 DEPLOY_DIR = ROOT / "kaggle_deploy"
 
+parser = argparse.ArgumentParser(description="Push / Trigger YT-1M Runner on Kaggle")
+parser.add_argument("--slot", type=str, default="auto", choices=["auto", "morning", "evening", "dual"], help="Target production slot: morning (ocean), evening (rain), dual, or auto")
+args = parser.parse_args()
+
 print("=" * 65)
-print("🚀 [YT-1M AUTONOMOUS CLOUD TRIGGER] INITIATING RUNNER")
+print(f"🚀 [YT-1M AUTONOMOUS CLOUD TRIGGER] INITIATING RUNNER (SLOT: {args.slot.upper()})")
 print("=" * 65)
 
 # If kaggle_deploy exists locally, push directly
@@ -35,6 +41,15 @@ else:
         print(f"Error pulling kernel: {r_pull.stderr}")
         sys.exit(r_pull.returncode)
     print("✓ Successfully pulled private kernel configuration!")
+
+# Configure slot in kaggle_runner.py if specified
+if args.slot != "auto":
+    runner_script = target_dir / "kaggle_runner.py"
+    if runner_script.exists():
+        content = runner_script.read_text(encoding="utf-8")
+        new_content = re.sub(r'("--slot",\s*)"[^"]*"', rf'\1"{args.slot}"', content)
+        runner_script.write_text(new_content, encoding="utf-8")
+        print(f"✓ Configured Kaggle runner for slot: {args.slot.upper()}")
 
 print("Triggering Kaggle kernel execution...")
 res = subprocess.run(["kaggle", "kernels", "push", "-p", str(target_dir)], capture_output=True, text=True)

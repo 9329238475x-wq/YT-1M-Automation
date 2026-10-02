@@ -1,0 +1,34 @@
+name: Channel 2 - USA Evening Sleep Rain (8:00 PM EST / 5:30 AM IST)
+
+on:
+  schedule:
+    # USA Evening Bedtime Slot (8:00 PM EST / 00:00 UTC / 5:30 AM IST) -> Evening Sleep Rain
+    # Scheduled at 00:05 UTC (8:05 PM EST) to avoid GitHub midnight concurrency delay
+    - cron: '5 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  trigger-sleep-rain-production:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Kaggle CLI
+        run: |
+          pip install --upgrade kaggle requests
+
+      - name: Configure Kaggle API Credentials
+        run: |
+          mkdir -p ~/.kaggle
+          echo '{"username":"sonuji93","key":"30359df27329878ca4326b93196c3d59"}' > ~/.kaggle/kaggle.json
+          chmod 600 ~/.kaggle/kaggle.json
+
+      - name: Deploy & Trigger Evening Sleep Rain on Kaggle
+        run: |
+          python push_to_kaggle.py --slot evening
