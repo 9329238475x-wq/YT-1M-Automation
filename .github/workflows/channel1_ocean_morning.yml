@@ -1,9 +1,7 @@
 name: Channel 1 - USA Morning Ocean Waves (6:30 AM EST / 4:00 PM IST)
 
 on:
-  schedule:
-    # USA Morning Slot (6:30 AM EST / 10:30 UTC / 4:00 PM IST) -> Morning Ocean Waves
-    - cron: '30 10 * * *'
+  # Triggered exclusively via Cloudflare Worker API to prevent duplicate runs
   workflow_dispatch:
 
 jobs:

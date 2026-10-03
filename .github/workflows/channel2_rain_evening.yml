@@ -1,9 +1,7 @@
 name: Channel 2 - USA Evening Sleep Rain (3:00 AM IST / 21:30 UTC / 5:30 PM EDT)
 
 on:
-  schedule:
-    # USA Evening Sleep Slot (03:00 AM IST = 21:30 UTC / 5:30 PM EDT) -> Evening Sleep Rain
-    - cron: '30 21 * * *'
+  # Triggered exclusively via Cloudflare Worker API to prevent duplicate runs
   workflow_dispatch:
 
 jobs:
