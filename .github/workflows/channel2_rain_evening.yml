@@ -1,10 +1,9 @@
-name: Channel 2 - USA Evening Sleep Rain (8:00 PM EST / 5:30 AM IST)
+name: Channel 2 - USA Evening Sleep Rain (3:00 AM IST / 21:30 UTC / 5:30 PM EDT)
 
 on:
   schedule:
-    # USA Evening Bedtime Slot (8:00 PM EST / 00:00 UTC / 5:30 AM IST) -> Evening Sleep Rain
-    # Scheduled at 00:05 UTC (8:05 PM EST) to avoid GitHub midnight concurrency delay
-    - cron: '5 0 * * *'
+    # USA Evening Sleep Slot (03:00 AM IST = 21:30 UTC / 5:30 PM EDT) -> Evening Sleep Rain
+    - cron: '30 21 * * *'
   workflow_dispatch:
 
 jobs:
